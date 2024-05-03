@@ -1,0 +1,5 @@
+spring:
+  liquibase:
+    change-log: classpath:test/changelog-master.xml
+    enabled: true
+    drop-first: true

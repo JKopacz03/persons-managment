@@ -1,0 +1,2 @@
+type,id,firstName,lastName,peselNumber,height,weight,email,version,workStartDate,actualProfession,salary,numberOfProfessions
+employee,6f6b4de3-a9ed-48b8-83aa-af4569ed39a0JohnDoe8001012141,175,80,johndoe@example.com,1,20220101,Programmer,5000.00,1

@@ -1,0 +1,4 @@
+id,username,password,role
+6,admin,$2a$12$fsj2iK883mPVO9LUSXLlNezboDonmqwz3JCMYZ64638HpZg7oQSwi,ADMIN
+7,importer,$2a$12$fsj2iK883mPVO9LUSXLlNezboDonmqwz3JCMYZ64638HpZg7oQSwi,IMPORTER
+8,employee,$2a$12$fsj2iK883mPVO9LUSXLlNezboDonmqwz3JCMYZ64638HpZg7oQSwi,EMPLOYEE

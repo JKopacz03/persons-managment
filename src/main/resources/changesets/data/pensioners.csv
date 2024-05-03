@@ -1,0 +1,6 @@
+id,first_name,last_name,pesel_number,height,weight,email,pension_value,work_years,type,version
+6d219edf-9ba8-43ff-a005-76d0de187779,John,Doe,91010112345,180,75,johndoe@example.com,2500.00,35,pensioner,1
+792d6906-3199-460e-9405-e27feaea87e9,Jane,Smith,88020223456,165,60,janesmith@example.com,2800.00,40,pensioner,1
+542db68a-b944-40e3-a5b1-b92814c6f50e,Michael,Johnson,95030334567,190,80,michaeljohnson@example.com,3000.00,45,pensioner,1
+96d190c6-a3f4-450b-ba71-aef6b9d2467c,Emily,Williams,92040445678,170,65,emilywilliams@example.com,2700.00,38,pensioner,1
+a671a2bd-0051-4424-95d3-a7fbca2194c6,David,Brown,90050556789,175,70,davidbrown@example.com,3200.00,42,pensioner,1

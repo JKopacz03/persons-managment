@@ -1,0 +1,69 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="jarek">
+        <createTable tableName="person">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)" />
+            <column name="last_name" type="VARCHAR(255)" />
+            <column name="pesel_number" type="VARCHAR(255)">
+               <constraints unique="true"/>
+            </column>
+            <column name="height" type="DECIMAL(10,2)"/>
+            <column name="weight" type="DECIMAL(10,2)"/>
+            <column name="email" type="VARCHAR(255)" />
+            <column name="college" type="VARCHAR(255)" />
+            <column name="academic_year" type="BIGINT" />
+            <column name="scholarship" type="DECIMAL(10,2)"/>
+            <column name="pension_value" type="DECIMAL(10,2)"/>
+            <column name="work_years" type="BIGINT" />
+            <column name="work_start_date" type="DATE" />
+            <column name="actual_profession" type="VARCHAR(255)" />
+            <column name="salary" type="DECIMAL(10,2)"/>
+            <column name="number_of_professions" type="BIGINT"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="version" type="BIGINT" />
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="jarek">
+        <createTable tableName="position">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)" />
+            <column name="start_date" type="DATE" />
+            <column name="end_date" type="DATE" />
+            <column name="salary" type="DECIMAL(10,2)"/>
+            <column name="employee_id" type="uuid" />
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="position"
+                                 baseColumnNames="employee_id"
+                                 referencedTableName="person"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_position_wallet"/>
+
+    </changeSet>
+
+    <changeSet id="3" author="Admin">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

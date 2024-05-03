@@ -1,0 +1,28 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  liquibase:
+    change-log: classpath:changelog-master.xml
+    enabled: true
+  datasource:
+    username: "postgres"
+    password: "qwerty"
+    url: "jdbc:postgresql://localhost:5432/persons"
+    driver-class: "org.postgresql.Driver"
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false

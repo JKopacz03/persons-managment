@@ -27,4 +27,6 @@ public class Student extends Person {
         this.academicYear = academicYear;
         this.scholarship = scholarship;
     }
+
+
 }

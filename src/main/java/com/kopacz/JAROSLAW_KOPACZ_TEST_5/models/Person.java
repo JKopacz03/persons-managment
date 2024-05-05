@@ -6,9 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DiscriminatorOptions;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -33,4 +35,10 @@ public class Person {
     private String type;
     @Version
     private Integer version;
+
+    public void setVersion(Integer version) {
+        if (!Objects.equals(this.version, version)) {
+            throw new OptimisticLockingFailureException("invalid version");
+        }
+    }
 }

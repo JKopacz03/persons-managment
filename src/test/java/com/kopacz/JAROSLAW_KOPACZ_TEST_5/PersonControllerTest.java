@@ -1171,6 +1171,7 @@ public class PersonControllerTest extends BaseIT {
                 180.0,
                 75.0,
                 "johndoe@example.com",
+                1,
                 BigDecimal.valueOf(2000),
                 70
         );
@@ -1221,6 +1222,7 @@ public class PersonControllerTest extends BaseIT {
                 165.0,
                 60.0,
                 "janesmith@example.com",
+                1,
                 "Miami University",
                 4,
                 BigDecimal.valueOf(1800)
@@ -1276,6 +1278,7 @@ public class PersonControllerTest extends BaseIT {
                 165.0,
                 60.0,
                 "alicesmith2@example.com",
+                1,
                 LocalDate.of(2022,2,1),
                 "Call center",
                 BigDecimal.valueOf(4500),
@@ -1318,6 +1321,7 @@ public class PersonControllerTest extends BaseIT {
                 165.0,
                 60.0,
                 "alicesmith2@example.com",
+                1,
                 LocalDate.of(2022,2,1),
                 "Call center",
                 BigDecimal.valueOf(4500),
@@ -1344,6 +1348,7 @@ public class PersonControllerTest extends BaseIT {
                 165.0,
                 60.0,
                 "alicesmith2@example.com",
+                1,
                 LocalDate.of(2022,2,1),
                 "Call center",
                 BigDecimal.valueOf(4500),
@@ -1357,6 +1362,33 @@ public class PersonControllerTest extends BaseIT {
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Bad pesel number"));
+    }
+    @Test
+    void edit_badVersion_shouldReturnBadRequest() throws Exception {
+        User user = new User(null, "admin", "qwerty", UserRole.EMPLOYEE);
+        String token = jwtService.generateToken(user);
+
+        EmployeeEditCommand employeeEditCommandCommand = new EmployeeEditCommand(
+                "Alice",
+                "Smith",
+                "81020223456",
+                165.0,
+                60.0,
+                "alicesmith2@example.com",
+                2,
+                LocalDate.of(2022,2,1),
+                "Call center",
+                BigDecimal.valueOf(4500),
+                2
+        );
+        String json = objectMapper.writeValueAsString(employeeEditCommandCommand);
+
+        mockMvc.perform(patch("/person/81020223456")
+                        .header("Authorization", format("Bearer %s", token))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("invalid version"));
     }
 
 

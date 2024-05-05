@@ -4,6 +4,7 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidWorkDateException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Employee;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Position;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.EmployeeEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.FindPersonCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PositionCommand;
@@ -14,7 +15,6 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.EmployeeRepository;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.PositionRepository;
 import org.springframework.batch.core.*;
 import org.modelmapper.ModelMapper;
-import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -34,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
@@ -64,7 +63,7 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
     @Transactional
     @Override
     public void edit(String peselNumber, PersonEditCommand command) {
-        Employee updatedEmployee = modelMapper.map(command, Employee.class);
+        EmployeeEditCommand updatedEmployee = modelMapper.map(command, EmployeeEditCommand.class);
         employeeRepository.findByPeselNumber(peselNumber)
                 .map(employeeToEdit -> {
                     Optional.ofNullable(updatedEmployee.getFirstName()).ifPresent(employeeToEdit::setFirstName);
@@ -73,6 +72,7 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
                     Optional.of(updatedEmployee.getHeight()).ifPresent(employeeToEdit::setHeight);
                     Optional.of(updatedEmployee.getWeight()).ifPresent(employeeToEdit::setWeight);
                     Optional.ofNullable(updatedEmployee.getEmail()).ifPresent(employeeToEdit::setEmail);
+                    Optional.ofNullable(updatedEmployee.getVersion()).ifPresent(employeeToEdit::setVersion);
                     Optional.ofNullable(updatedEmployee.getSalary()).ifPresent(employeeToEdit::setSalary);
                     Optional.ofNullable(updatedEmployee.getActualProfession()).ifPresent(employeeToEdit::setActualProfession);
                     Optional.of(updatedEmployee.getNumberOfProfessions()).ifPresent(employeeToEdit::setNumberOfProfessions);

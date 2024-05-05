@@ -18,13 +18,15 @@ public abstract class PersonEditCommand {
     private double height;
     private double weight;
     private String email;
+    private Integer version;
 
-    public PersonEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email) {
+    public PersonEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.peselNumber = peselNumber;
         this.height = height;
         this.weight = weight;
         this.email = email;
+        this.version = version;
     }
 }

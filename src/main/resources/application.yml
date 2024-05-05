@@ -26,3 +26,4 @@ spring:
       initialize-schema: always
     job:
       enabled: false
+

@@ -5,13 +5,12 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumb
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Student;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.FindPersonCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.StudentEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.StudentDto;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonFindAllStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.StudentRepository;
 import io.micrometer.common.util.StringUtils;
-import jakarta.annotation.PreDestroy;
-import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -19,8 +18,6 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -30,14 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.kopacz.JAROSLAW_KOPACZ_TEST_5.specification.StudentSpecification.*;
 
@@ -59,7 +52,7 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
     @Transactional
     @Override
     public void edit(String peselNumber, PersonEditCommand command) {
-        Student updatedStudent = modelMapper.map(command, Student.class);
+        StudentEditCommand updatedStudent = modelMapper.map(command, StudentEditCommand.class);
         studentRepository.findByPeselNumber(peselNumber)
                 .map(studentToEdit -> {
                     Optional.ofNullable(updatedStudent.getFirstName()).ifPresent(studentToEdit::setFirstName);
@@ -68,6 +61,7 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
                     Optional.of(updatedStudent.getHeight()).ifPresent(studentToEdit::setHeight);
                     Optional.of(updatedStudent.getWeight()).ifPresent(studentToEdit::setWeight);
                     Optional.ofNullable(updatedStudent.getEmail()).ifPresent(studentToEdit::setEmail);
+                    Optional.ofNullable(updatedStudent.getVersion()).ifPresent(studentToEdit::setVersion);
                     Optional.ofNullable(updatedStudent.getCollege()).ifPresent(studentToEdit::setCollege);
                     Optional.of(updatedStudent.getAcademicYear()).ifPresent(studentToEdit::setAcademicYear);
                     Optional.ofNullable(updatedStudent.getScholarship()).ifPresent(studentToEdit::setScholarship);

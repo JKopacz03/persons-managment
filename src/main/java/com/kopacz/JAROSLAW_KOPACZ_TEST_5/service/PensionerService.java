@@ -3,6 +3,7 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Pensioner;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.FindPersonCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PensionerEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.PensionerDto;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
@@ -25,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -50,7 +50,7 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
     @Transactional
     @Override
     public void edit(String peselNumber, PersonEditCommand command) {
-        Pensioner updatedPensioner = modelMapper.map(command, Pensioner.class);
+        PensionerEditCommand updatedPensioner = modelMapper.map(command, PensionerEditCommand.class);
         pensionerRepository.findByPeselNumber(peselNumber)
                 .map(pensionerToEdit -> {
                     Optional.ofNullable(updatedPensioner.getFirstName()).ifPresent(pensionerToEdit::setFirstName);
@@ -59,6 +59,7 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
                     Optional.of(updatedPensioner.getHeight()).ifPresent(pensionerToEdit::setHeight);
                     Optional.of(updatedPensioner.getWeight()).ifPresent(pensionerToEdit::setWeight);
                     Optional.ofNullable(updatedPensioner.getEmail()).ifPresent(pensionerToEdit::setEmail);
+                    Optional.ofNullable(updatedPensioner.getVersion()).ifPresent(pensionerToEdit::setVersion);
                     Optional.ofNullable(updatedPensioner.getPensionValue()).ifPresent(pensionerToEdit::setPensionValue);
                     Optional.of(updatedPensioner.getWorkYears()).ifPresent(pensionerToEdit::setWorkYears);
 

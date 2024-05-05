@@ -1,6 +1,7 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions;
 
 
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +27,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(OptimisticLockingFailureException.class)
     public ResponseEntity<String> optimisticLockingFailureException(OptimisticLockingFailureException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<String> optimisticLockException(OptimisticLockException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

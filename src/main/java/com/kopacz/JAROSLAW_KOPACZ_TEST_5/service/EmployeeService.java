@@ -86,7 +86,6 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
 
                     return employeeToEdit;
                 }).orElseThrow(() -> new NotExisitngUserWithPeselNumberException("Bad pesel number"));
-        employeeRepository.update(employee, command.getVersion(), employee.getId());
     }
 
     @Override

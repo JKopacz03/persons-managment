@@ -1,5 +1,6 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models;
 
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonAddFactory;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 import jakarta.persistence.*;
@@ -28,6 +29,10 @@ public class Employee extends Person {
             mappedBy = "employee"
     )
     private Set<Position> positions;
+
+    static {
+        PersonAddFactory.add("Employee", Employee.class);
+    }
 
     public Employee(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary, int numberOfProfessions) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);

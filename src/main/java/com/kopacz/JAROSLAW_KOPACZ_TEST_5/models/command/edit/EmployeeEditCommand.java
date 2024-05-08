@@ -1,4 +1,4 @@
-package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command;
+package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

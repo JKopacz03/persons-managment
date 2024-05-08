@@ -1,7 +1,7 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.controller;
 
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.FindPersonCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PersonEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.PersonDto;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.PersonService;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @RestController
@@ -23,9 +22,9 @@ public class PersonController {
     private final PersonService personService;
 
     @GetMapping("/find")
-    public ResponseEntity<List<? extends PersonDto>> find(@Valid FindPersonCommand findPersonCommand,
+    public ResponseEntity<List<? extends PersonDto>> find(@Valid @RequestBody PersonFindCommand personFindCommand,
                                                           @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(personService.findAll(findPersonCommand, pageable));
+        return ResponseEntity.ok(personService.findAll(personFindCommand, pageable));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

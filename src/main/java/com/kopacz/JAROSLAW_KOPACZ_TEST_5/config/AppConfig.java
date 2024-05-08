@@ -7,6 +7,8 @@ import org.springframework.batch.core.explore.support.JobExplorerFactoryBean;
 import org.springframework.batch.core.explore.support.SimpleJobExplorer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 
 @Configuration
 public class AppConfig {
@@ -14,5 +16,4 @@ public class AppConfig {
     ModelMapper modelMapper(){
         return new ModelMapper();
     }
-
 }

@@ -17,15 +17,15 @@ public class PensionerController {
     private final JobStatusService jobStatusService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'IMPORTER')")
-    @PostMapping(value = "/import", consumes = {"multipart/form-data"})
-    public ResponseEntity<Void> importAll(@RequestPart("file") MultipartFile file) {
-        pensionerService.imports(file);
-        return ResponseEntity.ok().build();
+    @PostMapping(value = "/import")
+    public ResponseEntity<Long> importAll(@RequestPart("file") MultipartFile file) {
+        Long id = pensionerService.imports(file);
+        return ResponseEntity.accepted().body(id);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'IMPORTER')")
     @GetMapping
-    public ResponseEntity<JobStatus> jobsStatus(){
-        return ResponseEntity.ok(jobStatusService.getJobStatus("importPensioners"));
+    public ResponseEntity<JobStatus> jobsStatus(@RequestParam Long id){
+        return ResponseEntity.ok(jobStatusService.getJobStatus(id));
     }
 }

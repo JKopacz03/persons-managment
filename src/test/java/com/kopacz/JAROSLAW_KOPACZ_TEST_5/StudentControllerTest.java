@@ -1,6 +1,7 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5;
 
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.ClearContext;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.DatabaseUtils;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.PersonsTest;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.User;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.UserRole;
@@ -25,16 +26,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudentControllerTest extends BaseIT {
     private final MockMvc mockMvc;
     private final JwtService jwtService;
+    private final DatabaseUtils databaseUtils;
 
     @Autowired
-    public StudentControllerTest(MockMvc mockMvc, JwtService jwtService) {
+    public StudentControllerTest(MockMvc mockMvc, JwtService jwtService, DatabaseUtils databaseUtils) {
         this.mockMvc = mockMvc;
         this.jwtService = jwtService;
+        this.databaseUtils = databaseUtils;
     }
 
     @Test
     @ClearContext
-    public void shouldImport100kStudentsUnder17s() throws Exception {
+    public void shouldImport100kStudentsUnder15s() throws Exception {
         User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
         String token = jwtService.generateToken(user);
 
@@ -46,19 +49,37 @@ public class StudentControllerTest extends BaseIT {
                 "csv",
                 resource.getInputStream());
 
-        long start = System.nanoTime();
+        mockMvc.perform(multipart("/student/import").file(file)
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isAccepted());
+
+        Thread.sleep(15000);
+
+        if (databaseUtils.countRecordsInDatabase() != 100015) {
+            Assertions.fail("Missing imports");
+        }
+    }
+
+    @Test
+    @ClearContext
+    public void shouldRollbackAllInserts() throws Exception {
+        User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
+        String token = jwtService.generateToken(user);
+
+        ClassPathResource resource = new ClassPathResource("test/testingCsv/invalidStudents.csv");
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "invalidStudents.csv",
+                "csv",
+                resource.getInputStream());
 
         mockMvc.perform(multipart("/student/import").file(file)
                         .header("Authorization", format("Bearer %s", token)))
-                .andExpect(status().isOk());
+                .andExpect(status().isAccepted());
 
-        long end = System.nanoTime();
-        long elapsedTime = end - start;
-
-        double elapsedTimeInSeconds = (double) elapsedTime / 1_000_000_000;
-
-        if (elapsedTimeInSeconds > 17) {
-            Assertions.fail("Waiting time is more then 17 seconds, its more less then 6k inserts in second. Time: " + elapsedTimeInSeconds + " s");
+        if (databaseUtils.countRecordsInDatabase() != 15) {
+            Assertions.fail("Failed rollback " + databaseUtils.countRecordsInDatabase());
         }
     }
 }

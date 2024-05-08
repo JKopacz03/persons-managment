@@ -1,11 +1,15 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidCsvException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Pensioner;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.FindPersonCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PensionerEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PensionerFindCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PensionerEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PersonEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.PensionerDto;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonEditFactory;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonFindAllFactory;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonFindAllStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.PensionerRepository;
@@ -40,6 +44,11 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
     private String TEMP_STORAGE = "/src/main/resources/imports/";
     private String TEMP_STORAGE_ABSOLUTE;
 
+    static {
+        PersonEditFactory.add(PensionerService.class.getSimpleName());
+        PersonFindAllFactory.add(PensionerService.class.getSimpleName());
+    }
+
     public PensionerService(PensionerRepository pensionerRepository, ModelMapper modelMapper, @Qualifier("runPensioner") Job job, JobLauncher jobLauncher) {
         this.pensionerRepository = pensionerRepository;
         this.modelMapper = modelMapper;
@@ -69,19 +78,21 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
 
 
     @Override
-    public List<PensionerDto> findAll(FindPersonCommand findPersonCommand, Pageable pageable) {
-        String firstName = findPersonCommand.getFirstName();
-        String lastName = findPersonCommand.getLastName();
-        String peselNumber = findPersonCommand.getPeselNumber();
-        double heightFrom = findPersonCommand.getHeightFrom();
-        double heightTo = findPersonCommand.getHeightTo();
-        double weightFrom = findPersonCommand.getWeightFrom();
-        double weightTo = findPersonCommand.getWeightTo();
-        String email = findPersonCommand.getEmail();
-        BigDecimal pensionValueFrom = findPersonCommand.getPensionValueFrom();
-        BigDecimal pensionValueTo = findPersonCommand.getPensionValueTo();
-        int workYearsFrom = findPersonCommand.getWorkYearsFrom();
-        int workYearsTo = findPersonCommand.getWorkYearsTo();
+    public List<PensionerDto> findAll(PersonFindCommand personFindCommand, Pageable pageable) {
+        PensionerFindCommand pensionerFindCommand = modelMapper.map(personFindCommand, PensionerFindCommand.class);
+
+        String firstName = pensionerFindCommand.getFirstName();
+        String lastName = pensionerFindCommand.getLastName();
+        String peselNumber = pensionerFindCommand.getPeselNumber();
+        double heightFrom = pensionerFindCommand.getHeightFrom();
+        double heightTo = pensionerFindCommand.getHeightTo();
+        double weightFrom = pensionerFindCommand.getWeightFrom();
+        double weightTo = pensionerFindCommand.getWeightTo();
+        String email = pensionerFindCommand.getEmail();
+        BigDecimal pensionValueFrom = pensionerFindCommand.getPensionValueFrom();
+        BigDecimal pensionValueTo = pensionerFindCommand.getPensionValueTo();
+        int workYearsFrom = pensionerFindCommand.getWorkYearsFrom();
+        int workYearsTo = pensionerFindCommand.getWorkYearsTo();
 
 
         Specification<Pensioner> filters = Specification.where(
@@ -103,7 +114,7 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
                     .toList();
     }
 
-    public void imports(MultipartFile multipartFile) {
+    public Long imports(MultipartFile multipartFile) {
         try {
             String originalFileName = multipartFile.getOriginalFilename();
             String appPath = new File("").getAbsolutePath();
@@ -116,11 +127,12 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
                     .addString("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName)
                     .addLong("startAt", System.currentTimeMillis()).toJobParameters();
 
-            jobLauncher.run(job, jobParameters);
+            JobExecution job = jobLauncher.run(this.job, jobParameters);
+
+            return job.getJobId();
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
                  JobParametersInvalidException e) {
-
-            e.printStackTrace();
+            throw new InvalidCsvException("Invalid csv");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

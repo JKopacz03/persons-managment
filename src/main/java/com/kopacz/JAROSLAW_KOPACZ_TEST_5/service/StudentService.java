@@ -3,10 +3,13 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidCsvException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Student;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.FindPersonCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.StudentEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.StudentFindCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PersonEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.StudentEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.StudentDto;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonEditFactory;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonFindAllFactory;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonFindAllStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.StudentRepository;
@@ -42,6 +45,12 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
     private JobLauncher jobLauncher;
     private String TEMP_STORAGE = "/src/main/resources/imports";
     private String TEMP_STORAGE_ABSOLUTE;
+
+    static {
+        PersonEditFactory.add(StudentService.class.getSimpleName());
+        PersonFindAllFactory.add(StudentService.class.getSimpleName());
+    }
+
     public StudentService(StudentRepository studentRepository, ModelMapper modelMapper, @Qualifier("runStudent") Job job, JobLauncher jobLauncher) {
         this.studentRepository = studentRepository;
         this.modelMapper = modelMapper;
@@ -70,20 +79,22 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
                 }).orElseThrow(() -> new NotExisitngUserWithPeselNumberException("Bad pesel number"));
     }
     @Override
-    public List<StudentDto> findAll(FindPersonCommand findPersonCommand, Pageable pageable) {
-        String firstName = findPersonCommand.getFirstName();
-        String lastName = findPersonCommand.getLastName();
-        String peselNumber = findPersonCommand.getPeselNumber();
-        double heightFrom = findPersonCommand.getHeightFrom();
-        double heightTo = findPersonCommand.getHeightTo();
-        double weightFrom = findPersonCommand.getWeightFrom();
-        double weightTo = findPersonCommand.getWeightTo();
-        String email = findPersonCommand.getEmail();
-        String college = findPersonCommand.getCollege();
-        int academicYearFrom = findPersonCommand.getAcademicYearFrom();
-        int academicYearTo = findPersonCommand.getAcademicYearTo();
-        BigDecimal scholarshipFrom = findPersonCommand.getScholarshipFrom();
-        BigDecimal scholarshipTo = findPersonCommand.getScholarshipTo();
+    public List<StudentDto> findAll(PersonFindCommand personFindCommand, Pageable pageable) {
+        StudentFindCommand findStudentCommand = modelMapper.map(personFindCommand, StudentFindCommand.class);
+
+        String firstName = findStudentCommand.getFirstName();
+        String lastName = findStudentCommand.getLastName();
+        String peselNumber = findStudentCommand.getPeselNumber();
+        double heightFrom = findStudentCommand.getHeightFrom();
+        double heightTo = findStudentCommand.getHeightTo();
+        double weightFrom = findStudentCommand.getWeightFrom();
+        double weightTo = findStudentCommand.getWeightTo();
+        String email = findStudentCommand.getEmail();
+        String college = findStudentCommand.getCollege();
+        int academicYearFrom = findStudentCommand.getAcademicYearFrom();
+        int academicYearTo = findStudentCommand.getAcademicYearTo();
+        BigDecimal scholarshipFrom = findStudentCommand.getScholarshipFrom();
+        BigDecimal scholarshipTo = findStudentCommand.getScholarshipTo();
 
         Specification<Student> filters = Specification.where(
                         StringUtils.isBlank(firstName) ? null : byFirstName(firstName))
@@ -106,7 +117,7 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
                 .toList();
     }
 
-    public void imports(MultipartFile multipartFile) {
+    public Long imports(MultipartFile multipartFile) {
         try {
             String originalFileName = multipartFile.getOriginalFilename();
             String appPath = new File("").getAbsolutePath();
@@ -119,7 +130,9 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
                     .addString("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName)
                     .addLong("startAt", System.currentTimeMillis()).toJobParameters();
 
-            jobLauncher.run(job, jobParameters);
+            JobExecution job = jobLauncher.run(this.job, jobParameters);
+
+            return job.getJobId();
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
                  JobParametersInvalidException e) {
 

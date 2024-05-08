@@ -4,11 +4,14 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidWorkDateException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Employee;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Position;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.EmployeeEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.FindPersonCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PersonEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PositionCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.*;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.EmployeeEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PersonEditCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.EmployeeFindCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.EmployeeDto;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonEditFactory;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonFindAllFactory;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonFindAllStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.EmployeeRepository;
@@ -40,7 +43,6 @@ import java.util.*;
 
 import static com.kopacz.JAROSLAW_KOPACZ_TEST_5.specification.EmployeeSpecification.*;
 
-
 @Service
 public class EmployeeService implements PersonEditStrategy, PersonFindAllStrategy {
     private EmployeeRepository employeeRepository;
@@ -50,6 +52,11 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
     private JobLauncher jobLauncher;
     private String TEMP_STORAGE = "/src/main/resources/imports/";
     private String TEMP_STORAGE_ABSOLUTE;
+
+    static {
+        PersonEditFactory.add(EmployeeService.class.getSimpleName());
+        PersonFindAllFactory.add(EmployeeService.class.getSimpleName());
+    }
 
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository, PositionRepository positionRepository, ModelMapper modelMapper, @Qualifier("runEmployee") Job job, JobLauncher jobLauncher) {
@@ -64,7 +71,7 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
     @Override
     public void edit(String peselNumber, PersonEditCommand command) {
         EmployeeEditCommand updatedEmployee = modelMapper.map(command, EmployeeEditCommand.class);
-        employeeRepository.findByPeselNumber(peselNumber)
+        Employee employee = employeeRepository.findByPeselNumber(peselNumber)
                 .map(employeeToEdit -> {
                     Optional.ofNullable(updatedEmployee.getFirstName()).ifPresent(employeeToEdit::setFirstName);
                     Optional.ofNullable(updatedEmployee.getLastName()).ifPresent(employeeToEdit::setLastName);
@@ -79,29 +86,32 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
 
                     return employeeToEdit;
                 }).orElseThrow(() -> new NotExisitngUserWithPeselNumberException("Bad pesel number"));
+        employeeRepository.update(employee, command.getVersion(), employee.getId());
     }
 
     @Override
     @Transactional
     public List<EmployeeDto> findAll(
-            FindPersonCommand findPersonCommand,
+            PersonFindCommand personFindCommand,
             Pageable pageable) {
 
-        String firstName = findPersonCommand.getFirstName();
-        String lastName = findPersonCommand.getLastName();
-        String peselNumber = findPersonCommand.getPeselNumber();
-        double heightFrom = findPersonCommand.getHeightFrom();
-        double heightTo = findPersonCommand.getHeightTo();
-        double weightFrom = findPersonCommand.getWeightFrom();
-        double weightTo = findPersonCommand.getWeightTo();
-        String email = findPersonCommand.getEmail();
-        LocalDate workStartDateFrom = findPersonCommand.getWorkStartDateFrom();
-        LocalDate workStartDateTo = findPersonCommand.getWorkStartDateTo();
-        String actualProfession = findPersonCommand.getActualProfession();
-        BigDecimal salaryFrom = findPersonCommand.getSalaryFrom();
-        BigDecimal salaryTo = findPersonCommand.getSalaryTo();
-        int numberOfProfessionsFrom = findPersonCommand.getNumberOfProfessionsFrom();
-        int numberOfProfessionsTo = findPersonCommand.getNumberOfProfessionsTo();
+        EmployeeFindCommand employeeFindCommand = modelMapper.map(personFindCommand, EmployeeFindCommand.class);
+
+        String firstName = employeeFindCommand.getFirstName();
+        String lastName = employeeFindCommand.getLastName();
+        String peselNumber = employeeFindCommand.getPeselNumber();
+        double heightFrom = employeeFindCommand.getHeightFrom();
+        double heightTo = employeeFindCommand.getHeightTo();
+        double weightFrom = employeeFindCommand.getWeightFrom();
+        double weightTo = employeeFindCommand.getWeightTo();
+        String email = employeeFindCommand.getEmail();
+        LocalDate workStartDateFrom = employeeFindCommand.getWorkStartDateFrom();
+        LocalDate workStartDateTo = employeeFindCommand.getWorkStartDateTo();
+        String actualProfession = employeeFindCommand.getActualProfession();
+        BigDecimal salaryFrom = employeeFindCommand.getSalaryFrom();
+        BigDecimal salaryTo = employeeFindCommand.getSalaryTo();
+        int numberOfProfessionsFrom = employeeFindCommand.getNumberOfProfessionsFrom();
+        int numberOfProfessionsTo = employeeFindCommand.getNumberOfProfessionsTo();
 
 
         Specification<Employee> filters = Specification.where(
@@ -128,6 +138,7 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
                         return dto;
                     })
                     .toList();
+
     }
 
     @Transactional
@@ -135,7 +146,7 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
         if(!command.getStartDate().isBefore(command.getEndDate())){
             throw new InvalidWorkDateException("end date must be after start date!");
         }
-        Employee employee = employeeRepository.findByPeselNumber(peselNumber).orElseThrow();
+        Employee employee = employeeRepository.findByPeselNumberWithPessimisticLock(peselNumber).orElseThrow();
         if(employee.getPositions().stream()
                 .anyMatch(e -> !command.getStartDate().isAfter(e.getEndDate())
                         && !command.getEndDate().isBefore(e.getStartDate()))){
@@ -146,7 +157,7 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
         positionRepository.save(position);
     }
 
-    public void imports(MultipartFile multipartFile) {
+    public Long imports(MultipartFile multipartFile) {
         try {
             String originalFileName = multipartFile.getOriginalFilename();
             String appPath = new File("").getAbsolutePath();
@@ -159,7 +170,9 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
                     .addString("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName)
                     .addLong("startAt", System.currentTimeMillis()).toJobParameters();
 
-            jobLauncher.run(job, jobParameters);
+            JobExecution job = jobLauncher.run(this.job, jobParameters);
+
+            return job.getJobId();
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
                  JobParametersInvalidException | IOException e) {
             throw new RuntimeException(e);

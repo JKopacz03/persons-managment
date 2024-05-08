@@ -8,8 +8,8 @@ import java.util.UUID;
 public class PensionerCsvGenerator {
 
     public static void main(String[] args) {
-        String filename = "src/main/resources/test/testingCsv/pensioners.csv";
-        generateCSV(filename, 100000);
+        String filename = "src/main/resources/test/testingCsv/invalidPensioners.csv";
+        generateCSV(filename, 5000);
     }
 
     public static void generateCSV(String filename, int numberOfRows) {

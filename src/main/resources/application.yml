@@ -27,3 +27,7 @@ spring:
     job:
       enabled: false
 
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

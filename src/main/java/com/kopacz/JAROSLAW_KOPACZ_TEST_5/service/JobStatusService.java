@@ -13,9 +13,8 @@ import org.springframework.stereotype.Service;
 public class JobStatusService {
     private final JobExplorer jobExplorer;
 
-    public JobStatus getJobStatus(String jobName) {
-        JobInstance jobInstance = jobExplorer.getLastJobInstance(jobName);
-        JobExecution jobExecution = jobExplorer.getLastJobExecution(jobInstance);
+    public JobStatus getJobStatus(Long id) {
+        JobExecution jobExecution = jobExplorer.getJobExecution(id);
 
         return new JobStatus(
                 jobExecution.getStatus().toString(),

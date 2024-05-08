@@ -8,7 +8,7 @@ import java.util.UUID;
 public class EmployeeCsvGenerator {
 
     public static void main(String[] args) {
-        String filename = "src/main/resources/test/testingCsv/employees.csv";
+        String filename = "src/main/resources/test/testingCsv/invalidEmployees.csv";
         generateCSV(filename, 100000);
     }
 

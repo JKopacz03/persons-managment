@@ -16,6 +16,9 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonFindAllStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.EmployeeRepository;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.PositionRepository;
+import jakarta.persistence.EntityManager;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.batch.core.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.batch.core.JobParameters;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Service;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,11 +57,6 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
     private String TEMP_STORAGE = "/src/main/resources/imports/";
     private String TEMP_STORAGE_ABSOLUTE;
 
-    static {
-        PersonEditFactory.add(EmployeeService.class.getSimpleName());
-        PersonFindAllFactory.add(EmployeeService.class.getSimpleName());
-    }
-
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository, PositionRepository positionRepository, ModelMapper modelMapper, @Qualifier("runEmployee") Job job, JobLauncher jobLauncher) {
         this.employeeRepository = employeeRepository;
@@ -67,25 +66,12 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
         this.jobLauncher = jobLauncher;
     }
 
-    @Transactional
     @Override
-    public void edit(String peselNumber, PersonEditCommand command) {
-        EmployeeEditCommand updatedEmployee = modelMapper.map(command, EmployeeEditCommand.class);
-        Employee employee = employeeRepository.findByPeselNumber(peselNumber)
-                .map(employeeToEdit -> {
-                    Optional.ofNullable(updatedEmployee.getFirstName()).ifPresent(employeeToEdit::setFirstName);
-                    Optional.ofNullable(updatedEmployee.getLastName()).ifPresent(employeeToEdit::setLastName);
-                    Optional.ofNullable(updatedEmployee.getPeselNumber()).ifPresent(employeeToEdit::setPeselNumber);
-                    Optional.of(updatedEmployee.getHeight()).ifPresent(employeeToEdit::setHeight);
-                    Optional.of(updatedEmployee.getWeight()).ifPresent(employeeToEdit::setWeight);
-                    Optional.ofNullable(updatedEmployee.getEmail()).ifPresent(employeeToEdit::setEmail);
-                    Optional.ofNullable(updatedEmployee.getVersion()).ifPresent(employeeToEdit::setVersion);
-                    Optional.ofNullable(updatedEmployee.getSalary()).ifPresent(employeeToEdit::setSalary);
-                    Optional.ofNullable(updatedEmployee.getActualProfession()).ifPresent(employeeToEdit::setActualProfession);
-                    Optional.of(updatedEmployee.getNumberOfProfessions()).ifPresent(employeeToEdit::setNumberOfProfessions);
-
-                    return employeeToEdit;
-                }).orElseThrow(() -> new NotExisitngUserWithPeselNumberException("Bad pesel number"));
+    @Transactional
+    public void edit(String id, PersonEditCommand command) {
+        Employee employee = modelMapper.map(command, Employee.class);
+        employee.setId(UUID.fromString(id));
+        employeeRepository.saveAndFlush(employee);
     }
 
     @Override

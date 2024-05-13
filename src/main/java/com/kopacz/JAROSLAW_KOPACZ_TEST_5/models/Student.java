@@ -18,14 +18,11 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @DiscriminatorValue("student")
-public class Student extends Person {
+@Component
+public class Student extends Person implements Personable {
     private String college;
     private int academicYear;
     private BigDecimal scholarship;
-
-    static {
-        PersonAddFactory.add("Student", Student.class);
-    }
 
     public Student(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, String college, int academicYear, BigDecimal scholarship) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);

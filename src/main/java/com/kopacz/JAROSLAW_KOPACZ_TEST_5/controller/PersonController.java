@@ -35,10 +35,10 @@ public class PersonController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{peselNumber}")
-    public ResponseEntity<Void> edit(@PathVariable("peselNumber") String peselNumber,
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> edit(@PathVariable("id") String id,
                                      @Valid @RequestBody PersonEditCommand command) {
-        personService.edit(peselNumber, command);
+        personService.edit(id, command);
         return ResponseEntity.ok().build();
     }
 }

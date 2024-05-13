@@ -535,7 +535,7 @@ public class EmployeeCasePersonControllerTest extends BaseIT {
         );
         String json = objectMapper.writeValueAsString(employeeEditCommandCommand);
 
-        mockMvc.perform(patch("/person/81020223456")
+        mockMvc.perform(patch("/person/d12bec21-0053-4438-adf2-26040f417f74")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

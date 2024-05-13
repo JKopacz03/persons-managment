@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -20,7 +21,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @DiscriminatorValue("employee")
-public class Employee extends Person {
+@Component
+public class Employee extends Person implements Personable {
     private LocalDate workStartDate;
     private String actualProfession;
     private BigDecimal salary;
@@ -29,10 +31,6 @@ public class Employee extends Person {
             mappedBy = "employee"
     )
     private Set<Position> positions;
-
-    static {
-        PersonAddFactory.add("Employee", Employee.class);
-    }
 
     public Employee(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary, int numberOfProfessions) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);

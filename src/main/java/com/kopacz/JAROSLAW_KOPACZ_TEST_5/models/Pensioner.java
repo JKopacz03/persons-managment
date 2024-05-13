@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DiscriminatorOptions;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,13 +18,10 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @DiscriminatorValue("pensioner")
-public class Pensioner extends Person {
+@Component
+public class Pensioner extends Person implements Personable {
     private BigDecimal pensionValue;
     private int workYears;
-
-    static {
-        PersonAddFactory.add("Pensioner", Pensioner.class);
-    }
 
     public Pensioner(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, BigDecimal pensionValue, int workYears) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);

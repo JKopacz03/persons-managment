@@ -2,6 +2,7 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidCsvException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Employee;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Student;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.StudentFindCommand;
@@ -34,6 +35,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.kopacz.JAROSLAW_KOPACZ_TEST_5.specification.StudentSpecification.*;
 
@@ -46,11 +48,6 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
     private String TEMP_STORAGE = "/src/main/resources/imports";
     private String TEMP_STORAGE_ABSOLUTE;
 
-    static {
-        PersonEditFactory.add(StudentService.class.getSimpleName());
-        PersonFindAllFactory.add(StudentService.class.getSimpleName());
-    }
-
     public StudentService(StudentRepository studentRepository, ModelMapper modelMapper, @Qualifier("runStudent") Job job, JobLauncher jobLauncher) {
         this.studentRepository = studentRepository;
         this.modelMapper = modelMapper;
@@ -60,23 +57,10 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
 
     @Transactional
     @Override
-    public void edit(String peselNumber, PersonEditCommand command) {
-        StudentEditCommand updatedStudent = modelMapper.map(command, StudentEditCommand.class);
-        studentRepository.findByPeselNumber(peselNumber)
-                .map(studentToEdit -> {
-                    Optional.ofNullable(updatedStudent.getFirstName()).ifPresent(studentToEdit::setFirstName);
-                    Optional.ofNullable(updatedStudent.getLastName()).ifPresent(studentToEdit::setLastName);
-                    Optional.ofNullable(updatedStudent.getPeselNumber()).ifPresent(studentToEdit::setPeselNumber);
-                    Optional.of(updatedStudent.getHeight()).ifPresent(studentToEdit::setHeight);
-                    Optional.of(updatedStudent.getWeight()).ifPresent(studentToEdit::setWeight);
-                    Optional.ofNullable(updatedStudent.getEmail()).ifPresent(studentToEdit::setEmail);
-                    Optional.ofNullable(updatedStudent.getVersion()).ifPresent(studentToEdit::setVersion);
-                    Optional.ofNullable(updatedStudent.getCollege()).ifPresent(studentToEdit::setCollege);
-                    Optional.of(updatedStudent.getAcademicYear()).ifPresent(studentToEdit::setAcademicYear);
-                    Optional.ofNullable(updatedStudent.getScholarship()).ifPresent(studentToEdit::setScholarship);
-
-                    return studentToEdit;
-                }).orElseThrow(() -> new NotExisitngUserWithPeselNumberException("Bad pesel number"));
+    public void edit(String id, PersonEditCommand command) {
+        Student student = modelMapper.map(command, Student.class);
+        student.setId(UUID.fromString(id));
+        studentRepository.saveAndFlush(student);
     }
     @Override
     public List<StudentDto> findAll(PersonFindCommand personFindCommand, Pageable pageable) {

@@ -8,7 +8,6 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.UserRole;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.*;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PensionerEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PensionerFindCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.StudentFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.JwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -368,7 +367,7 @@ public class PensionerCasePersonControllerTest extends BaseIT {
         );
         String json = objectMapper.writeValueAsString(pensionerCommand);
 
-        mockMvc.perform(patch("/person/91010112345")
+        mockMvc.perform(patch("/person/6d219edf-9ba8-43ff-a005-76d0de187779")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

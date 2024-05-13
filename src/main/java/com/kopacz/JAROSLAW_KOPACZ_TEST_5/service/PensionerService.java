@@ -3,6 +3,7 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidCsvException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Pensioner;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Student;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PensionerFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PensionerEditCommand;
@@ -44,11 +45,6 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
     private String TEMP_STORAGE = "/src/main/resources/imports/";
     private String TEMP_STORAGE_ABSOLUTE;
 
-    static {
-        PersonEditFactory.add(PensionerService.class.getSimpleName());
-        PersonFindAllFactory.add(PensionerService.class.getSimpleName());
-    }
-
     public PensionerService(PensionerRepository pensionerRepository, ModelMapper modelMapper, @Qualifier("runPensioner") Job job, JobLauncher jobLauncher) {
         this.pensionerRepository = pensionerRepository;
         this.modelMapper = modelMapper;
@@ -58,22 +54,10 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
 
     @Transactional
     @Override
-    public void edit(String peselNumber, PersonEditCommand command) {
-        PensionerEditCommand updatedPensioner = modelMapper.map(command, PensionerEditCommand.class);
-        pensionerRepository.findByPeselNumber(peselNumber)
-                .map(pensionerToEdit -> {
-                    Optional.ofNullable(updatedPensioner.getFirstName()).ifPresent(pensionerToEdit::setFirstName);
-                    Optional.ofNullable(updatedPensioner.getLastName()).ifPresent(pensionerToEdit::setLastName);
-                    Optional.ofNullable(updatedPensioner.getPeselNumber()).ifPresent(pensionerToEdit::setPeselNumber);
-                    Optional.of(updatedPensioner.getHeight()).ifPresent(pensionerToEdit::setHeight);
-                    Optional.of(updatedPensioner.getWeight()).ifPresent(pensionerToEdit::setWeight);
-                    Optional.ofNullable(updatedPensioner.getEmail()).ifPresent(pensionerToEdit::setEmail);
-                    Optional.ofNullable(updatedPensioner.getVersion()).ifPresent(pensionerToEdit::setVersion);
-                    Optional.ofNullable(updatedPensioner.getPensionValue()).ifPresent(pensionerToEdit::setPensionValue);
-                    Optional.of(updatedPensioner.getWorkYears()).ifPresent(pensionerToEdit::setWorkYears);
-
-                    return pensionerToEdit;
-                }).orElseThrow(() -> new NotExisitngUserWithPeselNumberException("Bad pesel number"));
+    public void edit(String id, PersonEditCommand command) {
+        Pensioner pensioner = modelMapper.map(command, Pensioner.class);
+        pensioner.setId(UUID.fromString(id));
+        pensionerRepository.saveAndFlush(pensioner);
     }
 
 

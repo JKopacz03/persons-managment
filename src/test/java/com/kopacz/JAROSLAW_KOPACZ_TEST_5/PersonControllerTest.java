@@ -10,7 +10,6 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.EmployeeEditCommand
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.StudentFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.JwtService;
 import org.hibernate.Session;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,14 +33,12 @@ public class PersonControllerTest extends BaseIT {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
-    private final Session session;
     @Autowired
     public PersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
-                                JwtService jwtService, Session session) {
+                                JwtService jwtService) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.jwtService = jwtService;
-        this.session = session;
     }
 
     @Test

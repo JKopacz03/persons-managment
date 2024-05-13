@@ -12,9 +12,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static java.lang.String.format;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -23,10 +30,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @PersonsTest
-public class StudentControllerTest extends BaseIT {
+@ActiveProfiles("test")
+@SpringBootTest
+@Testcontainers
+public class StudentControllerTest {
     private final MockMvc mockMvc;
     private final JwtService jwtService;
     private final DatabaseUtils databaseUtils;
+    @Container
+    private static PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:15-alpine3.18")
+                    .withDatabaseName("exchange")
+                    .withPassword("qwerty")
+                    .withUsername("postgres");
+
+    @DynamicPropertySource
+    public static void containerConfig(DynamicPropertyRegistry registry){
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    }
 
     @Autowired
     public StudentControllerTest(MockMvc mockMvc, JwtService jwtService, DatabaseUtils databaseUtils) {

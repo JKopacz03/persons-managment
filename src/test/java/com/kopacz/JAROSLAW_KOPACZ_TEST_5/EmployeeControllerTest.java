@@ -7,6 +7,7 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.PersonsTest;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.User;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.UserRole;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.PositionCommand;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.EmployeeFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.JwtService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -15,10 +16,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,12 +39,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @PersonsTest
-public class EmployeeControllerTest extends BaseIT {
+@Testcontainers
+@ActiveProfiles("test")
+@SpringBootTest
+public class EmployeeControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
-
     private final DatabaseUtils databaseUtils;
+    @Container
+    private static PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:15-alpine3.18")
+                    .withDatabaseName("exchange")
+                    .withPassword("qwerty")
+                    .withUsername("postgres");
+
+    @DynamicPropertySource
+    public static void containerConfig(DynamicPropertyRegistry registry){
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    }
 
     @Autowired
     public EmployeeControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
@@ -67,7 +90,28 @@ public class EmployeeControllerTest extends BaseIT {
                         .content(json))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/person/find?type=employee&peselNumber=80010112345"))
+        EmployeeFindCommand employeeCommand = new EmployeeFindCommand(
+                null,
+                null,
+                "80010112345",
+                0,
+                0,
+                0,
+                0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
+                0
+        );
+        String json2 = objectMapper.writeValueAsString(employeeCommand);
+
+        mockMvc.perform(get("/person/find")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].numberOfPositions").value(1));
     }

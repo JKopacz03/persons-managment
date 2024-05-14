@@ -1,16 +1,11 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidCsvException;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Employee;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Student;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.StudentFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PersonEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.StudentEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.StudentDto;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonEditFactory;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonFindAllFactory;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonFindAllStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.StudentRepository;
@@ -34,7 +29,6 @@ import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.kopacz.JAROSLAW_KOPACZ_TEST_5.specification.StudentSpecification.*;

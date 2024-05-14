@@ -1,24 +1,17 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidWorkDateException;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.NotExisitngUserWithPeselNumberException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Employee;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Position;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.*;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.EmployeeEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PersonEditCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.EmployeeFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PersonFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.dto.EmployeeDto;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonEditFactory;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonFindAllFactory;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonEditStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.strategy.PersonFindAllStrategy;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.EmployeeRepository;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.repository.PositionRepository;
-import jakarta.persistence.EntityManager;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.batch.core.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.batch.core.JobParameters;
@@ -34,7 +27,6 @@ import org.springframework.stereotype.Service;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 

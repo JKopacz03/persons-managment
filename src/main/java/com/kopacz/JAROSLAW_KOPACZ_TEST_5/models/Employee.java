@@ -1,14 +1,10 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models;
 
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonAddFactory;
-import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvDate;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

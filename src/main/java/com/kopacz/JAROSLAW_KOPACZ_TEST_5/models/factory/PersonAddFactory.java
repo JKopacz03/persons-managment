@@ -2,7 +2,6 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory;
 
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.exceptions.InvalidCommandException;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Person;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Personable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

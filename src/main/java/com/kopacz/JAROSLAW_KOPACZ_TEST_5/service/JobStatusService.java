@@ -3,7 +3,6 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5.service;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.JobStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.stereotype.Service;

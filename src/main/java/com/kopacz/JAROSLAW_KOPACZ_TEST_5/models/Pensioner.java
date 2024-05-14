@@ -1,13 +1,10 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models;
 
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.factory.PersonAddFactory;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DiscriminatorOptions;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

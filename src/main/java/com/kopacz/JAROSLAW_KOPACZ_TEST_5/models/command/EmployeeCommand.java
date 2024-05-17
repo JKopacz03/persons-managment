@@ -17,14 +17,11 @@ public class EmployeeCommand extends PersonCommand {
     private String actualProfession;
     @DecimalMin(inclusive = false, value = "0.0", message = "missing salary")
     private BigDecimal salary;
-    @Min(value = 0, message = "missing numberOfProfessions")
-    private int numberOfProfessions;
 
-    public EmployeeCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, LocalDate workStartDate, String actualProfession, BigDecimal salary, int numberOfProfessions) {
+    public EmployeeCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, LocalDate workStartDate, String actualProfession, BigDecimal salary) {
         super(firstName, lastName, peselNumber, height, weight, email);
         this.workStartDate = workStartDate;
         this.actualProfession = actualProfession;
         this.salary = salary;
-        this.numberOfProfessions = numberOfProfessions;
     }
 }

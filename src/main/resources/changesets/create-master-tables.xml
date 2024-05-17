@@ -24,7 +24,6 @@
             <column name="work_start_date" type="DATE" />
             <column name="actual_profession" type="VARCHAR(255)" />
             <column name="salary" type="DECIMAL(10,2)"/>
-            <column name="number_of_professions" type="BIGINT"/>
             <column name="type" type="VARCHAR(255)"/>
             <column name="version" type="BIGINT" />
         </createTable>

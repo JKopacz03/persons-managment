@@ -14,13 +14,11 @@ public class EmployeeEditCommand extends PersonEditCommand {
     private LocalDate workStartDate;
     private String actualProfession;
     private BigDecimal salary;
-    private int numberOfProfessions;
 
-    public EmployeeEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary, int numberOfProfessions) {
+    public EmployeeEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary) {
         super(firstName, lastName, peselNumber, height, weight, email, version);
         this.workStartDate = workStartDate;
         this.actualProfession = actualProfession;
         this.salary = salary;
-        this.numberOfProfessions = numberOfProfessions;
     }
 }

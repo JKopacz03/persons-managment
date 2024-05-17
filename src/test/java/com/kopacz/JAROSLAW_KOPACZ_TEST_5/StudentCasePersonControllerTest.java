@@ -2,20 +2,23 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.ClearContext;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.DatabaseUtils;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.PersonsTest;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.User;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.UserRole;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.*;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.StudentEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.StudentFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.JwtService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -40,6 +43,16 @@ public class StudentCasePersonControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
+    private final DatabaseUtils databaseUtils;
+
+    @Autowired
+    public StudentCasePersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, JwtService jwtService, DatabaseUtils databaseUtils) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+        this.jwtService = jwtService;
+        this.databaseUtils = databaseUtils;
+    }
+
     @Container
     private static PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:15-alpine3.18")
@@ -54,36 +67,10 @@ public class StudentCasePersonControllerTest {
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
 
-    @Autowired
-    public StudentCasePersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
-                                           JwtService jwtService) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.jwtService = jwtService;
-    }
-
     @Test
     void shouldReturnsStudentsByCollege() throws Exception {
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                "columbia university",
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
 
-        mockMvc.perform(get("/person/find")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        mockMvc.perform(get("/person/find?type=student&college=columbia university"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("David"))
                 .andExpect(jsonPath("$[0].lastName").value("Brown"))
@@ -100,26 +87,8 @@ public class StudentCasePersonControllerTest {
     @Test
     void shouldReturnsStudentsAcademicYearFrom4() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                4,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&academicYearFrom=4"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Jane"))
                 .andExpect(jsonPath("$[0].lastName").value("Smith"))
                 .andExpect(jsonPath("$[0].peselNumber").value("73620954782"))
@@ -143,26 +112,8 @@ public class StudentCasePersonControllerTest {
     @Test
     void shouldReturnsStudentsAcademicYearTo2() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                2,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&academicYearTo=2"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Michael"))
                 .andExpect(jsonPath("$[0].lastName").value("Johnson"))
                 .andExpect(jsonPath("$[0].peselNumber").value("73620954783"))
@@ -177,26 +128,8 @@ public class StudentCasePersonControllerTest {
     @Test
     void shouldReturnsStudentsScholarshipFrom2000() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                BigDecimal.valueOf(2000),
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&scholarshipFrom=2000"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("David"))
                 .andExpect(jsonPath("$[0].lastName").value("Brown"))
                 .andExpect(jsonPath("$[0].peselNumber").value("73620954785"))
@@ -211,26 +144,8 @@ public class StudentCasePersonControllerTest {
     @Test
     void shouldReturnsStudentsScholarshipTo1200() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                BigDecimal.valueOf(1200)
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&scholarshipTo=1200"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Michael"))
                 .andExpect(jsonPath("$[0].lastName").value("Johnson"))
                 .andExpect(jsonPath("$[0].peselNumber").value("73620954783"))
@@ -265,37 +180,16 @@ public class StudentCasePersonControllerTest {
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk());
-
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                "81981298",
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json2 = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json2))
-                .andExpect(jsonPath("$[0].firstName").value("Jan"))
-                .andExpect(jsonPath("$[0].lastName").value("Kowalski"))
-                .andExpect(jsonPath("$[0].peselNumber").value("81981298"))
-                .andExpect(jsonPath("$[0].height").value(180.0))
-                .andExpect(jsonPath("$[0].weight").value(90.0))
-                .andExpect(jsonPath("$[0].email").value("janekkowal@gmail.com"))
-                .andExpect(jsonPath("$[0].college").value("example college"))
-                .andExpect(jsonPath("$[0].academicYear").value(2))
-                .andExpect(jsonPath("$[0].scholarship").value(3000.0));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName").value("Jan"))
+                .andExpect(jsonPath("$.lastName").value("Kowalski"))
+                .andExpect(jsonPath("$.peselNumber").value("81981298"))
+                .andExpect(jsonPath("$.height").value(180.0))
+                .andExpect(jsonPath("$.weight").value(90.0))
+                .andExpect(jsonPath("$.email").value("janekkowal@gmail.com"))
+                .andExpect(jsonPath("$.college").value("example college"))
+                .andExpect(jsonPath("$.academicYear").value(2))
+                .andExpect(jsonPath("$.scholarship").value(3000.0));;
     }
 
     @Test
@@ -382,37 +276,6 @@ public class StudentCasePersonControllerTest {
         User user = new User(null, "admin", "qwerty", UserRole.ADMIN);
         String token = jwtService.generateToken(user);
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                "73620954782",
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json2 = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json2))
-                .andExpect(jsonPath("$[0].firstName").value("Jane"))
-                .andExpect(jsonPath("$[0].lastName").value("Smith"))
-                .andExpect(jsonPath("$[0].peselNumber").value("73620954782"))
-                .andExpect(jsonPath("$[0].height").value(165.0))
-                .andExpect(jsonPath("$[0].weight").value(60.0))
-                .andExpect(jsonPath("$[0].email").value("janesmith@example.com"))
-                .andExpect(jsonPath("$[0].college").value("Stanford University"))
-                .andExpect(jsonPath("$[0].academicYear").value(4))
-                .andExpect(jsonPath("$[0].scholarship").value(1800.00));
-
-
         StudentEditCommand studentCommand = new StudentEditCommand(
                 "Josh",
                 "Smith",
@@ -427,15 +290,14 @@ public class StudentCasePersonControllerTest {
         );
         String json = objectMapper.writeValueAsString(studentCommand);
 
-        mockMvc.perform(patch("/person/ef91ab8c-fa63-42c3-8ab6-4382106893bf")
+        mockMvc.perform(put("/person/ef91ab8c-fa63-42c3-8ab6-4382106893bf")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json2))
+        mockMvc.perform(get("/person/find?type=student&peselNumber=73620954782"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Josh"))
                 .andExpect(jsonPath("$[0].lastName").value("Smith"))
                 .andExpect(jsonPath("$[0].peselNumber").value("73620954782"))
@@ -448,4 +310,51 @@ public class StudentCasePersonControllerTest {
 
     }
 
+    @Test
+    @ClearContext
+    public void shouldImport100kStudentsUnder15s() throws Exception {
+        User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
+        String token = jwtService.generateToken(user);
+
+        ClassPathResource resource = new ClassPathResource("test/testingCsv/students.csv");
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "students.csv",
+                "csv",
+                resource.getInputStream());
+
+        mockMvc.perform(multipart("/person/import?type=student").file(file)
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isAccepted());
+
+        Thread.sleep(15000);
+
+        if (databaseUtils.countRecordsInDatabase() != 100015) {
+            Assertions.fail("Missing imports");
+        }
+    }
+
+    @Test
+    @ClearContext
+    public void shouldRollbackAllInserts() throws Exception {
+        User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
+        String token = jwtService.generateToken(user);
+
+        ClassPathResource resource = new ClassPathResource("test/testingCsv/invalidStudents.csv");
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "invalidStudents.csv",
+                "csv",
+                resource.getInputStream());
+
+        mockMvc.perform(multipart("/person/import?type=student").file(file)
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isAccepted());
+
+        if (databaseUtils.countRecordsInDatabase() != 15) {
+            Assertions.fail("Failed rollback " + databaseUtils.countRecordsInDatabase());
+        }
+    }
 }

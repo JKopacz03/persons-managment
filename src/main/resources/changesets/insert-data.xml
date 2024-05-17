@@ -47,7 +47,6 @@
             <column header="work_start_date" name="work_start_date" />
             <column header="actual_profession" name="actual_profession" />
             <column header="salary" name="salary"/>
-            <column header="number_of_professions" name="number_of_professions"/>
             <column header="type" name="type"/>
         </loadData>
     </changeSet>

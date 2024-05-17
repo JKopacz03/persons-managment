@@ -1,26 +1,31 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.ClearContext;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.DatabaseUtils;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.PersonsTest;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.User;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.UserRole;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.*;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.EmployeeEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.StudentFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.JwtService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -42,6 +47,16 @@ public class PersonControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
+    private final DatabaseUtils databaseUtils;
+    @Autowired
+    public PersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
+                                JwtService jwtService, DatabaseUtils databaseUtils) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+        this.jwtService = jwtService;
+        this.databaseUtils = databaseUtils;
+    }
+
     @Container
     private static PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:15-alpine3.18")
@@ -55,23 +70,30 @@ public class PersonControllerTest {
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
-    @Autowired
-    public PersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
-                                JwtService jwtService) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.jwtService = jwtService;
+
+
+    @Test
+    void badType_shouldBadRequest() throws Exception {
+
+        mockMvc.perform(get("/person/find?type=efew"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid command type"));
+
+    }
+
+    @Test
+    void emptyParameter_shouldBadRequest() throws Exception {
+
+        mockMvc.perform(get("/person/find"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("type is mandatory"));
+
     }
 
     @Test
     void shouldReturnsStudentsWithPageSize3() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand();
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find?size=3")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&size=3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
@@ -106,12 +128,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsWithPageSize3andNextPage() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand();
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find?size=3&page=1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        mockMvc.perform(get("/person/find?type=student&size=3&page=1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Emily"))
                 .andExpect(jsonPath("$[0].lastName").value("Williams"))
@@ -136,26 +153,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsWithFirstnameEmily() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                "emily",
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&firstName=emily"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Emily"))
                 .andExpect(jsonPath("$[0].lastName").value("Williams"))
@@ -171,26 +169,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsWithLastnameBrown() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                "brown",
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&lastName=brown"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("David"))
                 .andExpect(jsonPath("$[0].lastName").value("Brown"))
@@ -206,26 +185,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsHeightFrom180() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                180,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&heightFrom=180"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
@@ -250,26 +210,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsHeightTo170() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                170,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&heightTo=170"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Jane"))
                 .andExpect(jsonPath("$[0].lastName").value("Smith"))
@@ -294,26 +235,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsHWeightFrom80() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                80,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&weightFrom=80"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Michael"))
                 .andExpect(jsonPath("$[0].lastName").value("Johnson"))
@@ -329,26 +251,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsHWeightTo60() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                60,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&weightTo=60"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Jane"))
                 .andExpect(jsonPath("$[0].lastName").value("Smith"))
@@ -364,26 +267,7 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsByPeselnumber() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                "73620954785",
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&peselNumber=73620954785"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("David"))
                 .andExpect(jsonPath("$[0].lastName").value("Brown"))
@@ -400,26 +284,8 @@ public class PersonControllerTest {
     @Test
     void shouldReturnsStudentsByEmail() throws Exception {
 
-        StudentFindCommand studentFindCommand = new StudentFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                "davidbrown@example.com",
-                null,
-                0,
-                0,
-                null,
-                null
-        );
-        String json = objectMapper.writeValueAsString(studentFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=student&email=davidbrown@example.com"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("David"))
                 .andExpect(jsonPath("$[0].lastName").value("Brown"))
                 .andExpect(jsonPath("$[0].peselNumber").value("73620954785"))
@@ -621,12 +487,11 @@ public class PersonControllerTest {
                 1,
                 LocalDate.of(2022,2,1),
                 "Call center",
-                BigDecimal.valueOf(4500),
-                2
+                BigDecimal.valueOf(4500)
         );
         String json = objectMapper.writeValueAsString(employeeEditCommandCommand);
 
-        mockMvc.perform(patch("/person/d12bec21-0053-4438-adf2-26040f417f74")
+        mockMvc.perform(put("/person/d12bec21-0053-4438-adf2-26040f417f74")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -648,16 +513,52 @@ public class PersonControllerTest {
                 2,
                 LocalDate.of(2022,2,1),
                 "Call center",
-                BigDecimal.valueOf(4500),
-                2
+                BigDecimal.valueOf(4500)
         );
         String json = objectMapper.writeValueAsString(employeeEditCommandCommand);
 
-        mockMvc.perform(patch("/person/d12bec21-0053-4438-adf2-26040f417f74")
+        mockMvc.perform(put("/person/d12bec21-0053-4438-adf2-26040f417f74")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @ClearContext
+    public void shouldReturnJobStatus() throws Exception {
+        User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
+        String token = jwtService.generateToken(user);
+
+        ClassPathResource resource = new ClassPathResource("test/testingCsv/pensioners.csv");
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "pensioners.csv",
+                "csv",
+                resource.getInputStream());
+
+        mockMvc.perform(multipart("/person/import?type=pensioner").file(file)
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isAccepted());
+
+        Thread.sleep(15000);
+
+        mockMvc.perform(get("/person/job-status/1")
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.processedCount").value(100000));
+    }
+
+    @Test
+    public void invalidId_shouldReturnBadRequest() throws Exception {
+        User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
+        String token = jwtService.generateToken(user);
+
+        mockMvc.perform(get("/person/job-status/1")
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid id"));
+    }
 }

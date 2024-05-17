@@ -7,7 +7,6 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 
 public class CustomFlatFileItemReader<T> extends FlatFileItemReader<T> {
-
     private Resource resource;
 
     @Override
@@ -26,7 +25,7 @@ public class CustomFlatFileItemReader<T> extends FlatFileItemReader<T> {
             }
             return item;
         } catch (Exception e) {
-            throw new InvalidCsvException("Invalid csv");
+            throw new InvalidCsvException(e);
         }
     }
 

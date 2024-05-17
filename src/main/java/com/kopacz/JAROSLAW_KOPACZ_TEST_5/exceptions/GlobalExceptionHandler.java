@@ -19,8 +19,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(JobStatusInvalidIdException.class)
+    public ResponseEntity<String> jobStatusInvalidIdException(JobStatusInvalidIdException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler(NotExisitngUserWithPeselNumberException.class)
     public ResponseEntity<String> notExisitngUserWithPeselNumberException(NotExisitngUserWithPeselNumberException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCommandException.class)
+    public ResponseEntity<String> invalidCommandException(InvalidCommandException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

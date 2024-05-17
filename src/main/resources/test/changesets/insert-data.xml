@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="load-student-data" author="admin">
-        <loadData encoding="UTF-8" file="changesets/data/students.csv" quotchar="&quot;" separator="," tableName="person">
+        <loadData encoding="UTF-8" file="test/changesets/data/students.csv" quotchar="&quot;" separator="," tableName="person">
             <column header="id" name="id"/>
             <column header="first_name" name="first_name"/>
             <column header="last_name" name="last_name" />
@@ -21,7 +21,7 @@
     </changeSet>
 
     <changeSet id="load-pensioner-data" author="admin">
-        <loadData encoding="UTF-8" file="changesets/data/pensioners.csv" quotchar="&quot;" separator="," tableName="person">
+        <loadData encoding="UTF-8" file="test/changesets/data/pensioners.csv" quotchar="&quot;" separator="," tableName="person">
             <column header="id" name="id"/>
             <column header="first_name" name="first_name"/>
             <column header="last_name" name="last_name" />
@@ -36,7 +36,7 @@
     </changeSet>
 
     <changeSet id="load-employee-data" author="admin">
-        <loadData encoding="UTF-8" file="changesets/data/employees.csv" quotchar="&quot;" separator="," tableName="person">
+        <loadData encoding="UTF-8" file="test/changesets/data/employees.csv" quotchar="&quot;" separator="," tableName="person">
             <column header="id" name="id"/>
             <column header="first_name" name="first_name"/>
             <column header="last_name" name="last_name" />
@@ -47,17 +47,27 @@
             <column header="work_start_date" name="work_start_date" />
             <column header="actual_profession" name="actual_profession" />
             <column header="salary" name="salary"/>
-            <column header="number_of_professions" name="number_of_professions"/>
             <column header="type" name="type"/>
         </loadData>
     </changeSet>
 
     <changeSet id="load-user-data" author="admin">
-        <loadData encoding="UTF-8" file="changesets/data/users.csv" quotchar="&quot;" separator="," tableName="users">
+        <loadData encoding="UTF-8" file="test/changesets/data/users.csv" quotchar="&quot;" separator="," tableName="users">
             <column header="id" name="id"/>
             <column header="username" name="username"/>
             <column header="password" name="password" />
             <column header="role" name="role"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="load-position-data" author="admin">
+        <loadData encoding="UTF-8" file="test/changesets/data/positions.csv" quotchar="&quot;" separator="," tableName="position">
+            <column header="id" name="id"/>
+            <column header="name" name="name"/>
+            <column header="start_date" name="start_date"/>
+            <column header="end_date" name="end_date"/>
+            <column header="salary" name="salary"/>
+            <column header="employee_id" name="employee_id"/>
         </loadData>
     </changeSet>
 

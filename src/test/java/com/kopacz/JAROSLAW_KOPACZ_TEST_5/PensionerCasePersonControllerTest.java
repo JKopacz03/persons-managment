@@ -2,20 +2,22 @@ package com.kopacz.JAROSLAW_KOPACZ_TEST_5;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.ClearContext;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.DatabaseUtils;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.PersonsTest;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.User;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.UserRole;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.*;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit.PensionerEditCommand;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.find.PensionerFindCommand;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.JwtService;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -36,10 +38,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest
 @Testcontainers
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PensionerCasePersonControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
+    private final DatabaseUtils databaseUtils;
+
+    @Autowired
+    public PensionerCasePersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper, JwtService jwtService, DatabaseUtils databaseUtils) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+        this.jwtService = jwtService;
+        this.databaseUtils = databaseUtils;
+    }
+
     @Container
     private static PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:15-alpine3.18")
@@ -54,35 +67,10 @@ public class PensionerCasePersonControllerTest {
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
 
-    @Autowired
-    public PensionerCasePersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
-                                             JwtService jwtService) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.jwtService = jwtService;
-    }
-
     @Test
     void shouldReturnsPensionersWorkYearsFrom40() throws Exception {
-        PensionerFindCommand pensionerFindCommand = new PensionerFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                null,
-                40,
-                0
-        );
-        String json = objectMapper.writeValueAsString(pensionerFindCommand);
 
-        mockMvc.perform(get("/person/find")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        mockMvc.perform(get("/person/find?type=pensioner&workYearsFrom=40"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Jane"))
                 .andExpect(jsonPath("$[0].lastName").value("Smith"))
@@ -113,25 +101,7 @@ public class PensionerCasePersonControllerTest {
     @Test
     void shouldReturnsPensionersWorkYearsTo35() throws Exception {
 
-        PensionerFindCommand pensionerFindCommand = new PensionerFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                null,
-                0,
-                35
-        );
-        String json = objectMapper.writeValueAsString(pensionerFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=pensioner&workYearsTo=35"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
@@ -146,25 +116,7 @@ public class PensionerCasePersonControllerTest {
     @Test
     void shouldReturnsPensionersPensionValueFrom3000() throws Exception {
 
-        PensionerFindCommand pensionerFindCommand = new PensionerFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                BigDecimal.valueOf(3000),
-                null,
-                0,
-                0
-        );
-        String json = objectMapper.writeValueAsString(pensionerFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=pensioner&pensionValueFrom=3000"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("Michael"))
                 .andExpect(jsonPath("$[0].lastName").value("Johnson"))
@@ -187,25 +139,8 @@ public class PensionerCasePersonControllerTest {
     @Test
     void shouldReturnsPensionersPensionValueTo3000() throws Exception {
 
-        PensionerFindCommand pensionerFindCommand = new PensionerFindCommand(
-                null,
-                null,
-                null,
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                BigDecimal.valueOf(3000),
-                0,
-                0
-        );
-        String json = objectMapper.writeValueAsString(pensionerFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
+        mockMvc.perform(get("/person/find?type=pensioner&pensionValueTo=3000"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
                 .andExpect(jsonPath("$[0].peselNumber").value("91010112345"))
@@ -262,35 +197,15 @@ public class PensionerCasePersonControllerTest {
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk());
-
-        PensionerFindCommand pensionerFindCommand = new PensionerFindCommand(
-                null,
-                null,
-                "81981297",
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                null,
-                0,
-                0
-        );
-        String json2 = objectMapper.writeValueAsString(pensionerFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json2))
-                .andExpect(jsonPath("$[0].firstName").value("Jan"))
-                .andExpect(jsonPath("$[0].lastName").value("Kowalski"))
-                .andExpect(jsonPath("$[0].peselNumber").value("81981297"))
-                .andExpect(jsonPath("$[0].height").value(180.0))
-                .andExpect(jsonPath("$[0].weight").value(90.0))
-                .andExpect(jsonPath("$[0].email").value("janekkowal@gmail.com"))
-                .andExpect(jsonPath("$[0].pensionValue").value(1000.0))
-                .andExpect(jsonPath("$[0].workYears").value(60));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName").value("Jan"))
+                .andExpect(jsonPath("$.lastName").value("Kowalski"))
+                .andExpect(jsonPath("$.peselNumber").value("81981297"))
+                .andExpect(jsonPath("$.height").value(180.0))
+                .andExpect(jsonPath("$.weight").value(90.0))
+                .andExpect(jsonPath("$.email").value("janekkowal@gmail.com"))
+                .andExpect(jsonPath("$.pensionValue").value(1000.0))
+                .andExpect(jsonPath("$.workYears").value(60));
     }
 
     @Test
@@ -349,34 +264,6 @@ public class PensionerCasePersonControllerTest {
         User user = new User(null, "admin", "qwerty", UserRole.ADMIN);
         String token = jwtService.generateToken(user);
 
-        PensionerFindCommand pensionerFindCommand = new PensionerFindCommand(
-                null,
-                null,
-                "91010112345",
-                0,
-                0,
-                0,
-                0,
-                null,
-                null,
-                null,
-                0,
-                0
-        );
-        String json2 = objectMapper.writeValueAsString(pensionerFindCommand);
-
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json2))
-                .andExpect(jsonPath("$[0].firstName").value("John"))
-                .andExpect(jsonPath("$[0].lastName").value("Doe"))
-                .andExpect(jsonPath("$[0].peselNumber").value("91010112345"))
-                .andExpect(jsonPath("$[0].height").value(180.0))
-                .andExpect(jsonPath("$[0].weight").value(75.0))
-                .andExpect(jsonPath("$[0].email").value("johndoe@example.com"))
-                .andExpect(jsonPath("$[0].pensionValue").value(2500.00))
-                .andExpect(jsonPath("$[0].workYears").value(35));
-
         PensionerEditCommand pensionerCommand = new PensionerEditCommand(
                 "John",
                 "Doe",
@@ -390,15 +277,14 @@ public class PensionerCasePersonControllerTest {
         );
         String json = objectMapper.writeValueAsString(pensionerCommand);
 
-        mockMvc.perform(patch("/person/6d219edf-9ba8-43ff-a005-76d0de187779")
+        mockMvc.perform(put("/person/6d219edf-9ba8-43ff-a005-76d0de187779")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/person/find")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json2))
+        mockMvc.perform(get("/person/find?type=pensioner&peselNumber=91010112345"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
                 .andExpect(jsonPath("$[0].peselNumber").value("91010112345"))
@@ -407,6 +293,54 @@ public class PensionerCasePersonControllerTest {
                 .andExpect(jsonPath("$[0].email").value("johndoe@example.com"))
                 .andExpect(jsonPath("$[0].pensionValue").value(2000.00))
                 .andExpect(jsonPath("$[0].workYears").value(70));
+    }
 
+    @Test
+    @ClearContext
+    @Order(1)
+    public void shouldImport100kPensionersUnder15s() throws Exception {
+        User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
+        String token = jwtService.generateToken(user);
+
+        ClassPathResource resource = new ClassPathResource("test/testingCsv/pensioners.csv");
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "pensioners.csv",
+                "csv",
+                resource.getInputStream());
+
+        mockMvc.perform(multipart("/person/import?type=pensioner").file(file)
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isAccepted());
+
+        Thread.sleep(15000);
+
+        if (databaseUtils.countRecordsInDatabase() != 100015) {
+            Assertions.fail("Missing imports");
+        }
+    }
+
+    @Test
+    @ClearContext
+    public void shouldRollbackAllInserts() throws Exception {
+        User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
+        String token = jwtService.generateToken(user);
+
+        ClassPathResource resource = new ClassPathResource("test/testingCsv/invalidPensioners.csv");
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "invalidPensioners.csv",
+                "csv",
+                resource.getInputStream());
+
+        mockMvc.perform(multipart("/person/import?type=pensioner").file(file)
+                        .header("Authorization", format("Bearer %s", token)))
+                .andExpect(status().isAccepted());
+
+        if (databaseUtils.countRecordsInDatabase() != 15) {
+            Assertions.fail("Failed rollback " + databaseUtils.countRecordsInDatabase());
+        }
     }
 }

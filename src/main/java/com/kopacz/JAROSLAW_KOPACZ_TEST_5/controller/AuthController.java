@@ -9,6 +9,7 @@ import com.kopacz.JAROSLAW_KOPACZ_TEST_5.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +24,11 @@ public class AuthController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@Valid @RequestBody RegisterCommand command){
+    public ResponseEntity<AuthDto> register(@Valid @RequestBody RegisterCommand command){
         User user = modelMapper.map(command, User.class);
         user.setRole(UserRole.valueOf(command.getRole()));
         authService.save(user);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(authService.save(user), HttpStatus.CREATED);
     }
 
     @PostMapping("/authenticate")

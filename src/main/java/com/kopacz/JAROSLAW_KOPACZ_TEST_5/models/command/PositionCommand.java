@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 public class PositionCommand {
+    @NotBlank(message = "peselNumber is mandatory")
+    private String peselNumber;
     @NotBlank(message = "name is mandatory")
     private String name;
     @NotNull(message = "startDate is mandatory")

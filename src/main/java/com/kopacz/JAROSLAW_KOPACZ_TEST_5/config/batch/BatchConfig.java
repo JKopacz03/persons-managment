@@ -14,7 +14,6 @@ import org.springframework.core.task.TaskExecutor;
 @EnableBatchProcessing
 @RequiredArgsConstructor
 public class BatchConfig {
-
     private final JobRepository jobRepository;
     @Bean
     public TaskExecutor asyncTaskExecutor() {

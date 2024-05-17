@@ -53,8 +53,8 @@ public class EmployeeBatchConfig {
     public JdbcBatchItemWriter<Employee> employeeWriterJdbc() {
         JdbcBatchItemWriter<Employee> writer = new JdbcBatchItemWriter<>();
         writer.setDataSource(dataSource);
-        writer.setSql("INSERT INTO person (type, id, first_name, last_name, pesel_number, height, weight, email, version, work_start_date, actual_profession, salary, number_of_professions)" +
-                "VALUES (:type, :id, :firstName, :lastName, :peselNumber, :height, :weight, :email, :version, :workStartDate, :actualProfession, :salary, :numberOfProfessions)");
+        writer.setSql("INSERT INTO person (type, id, first_name, last_name, pesel_number, height, weight, email, version, work_start_date, actual_profession, salary)" +
+                "VALUES (:type, :id, :firstName, :lastName, :peselNumber, :height, :weight, :email, :version, :workStartDate, :actualProfession, :salary)");
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
         return writer;
     }
@@ -84,7 +84,7 @@ public class EmployeeBatchConfig {
         lineTokenizer.setDelimiter(",");
         lineTokenizer.setStrict(false);
         lineTokenizer.setNames("type", "id", "firstName", "lastName", "peselNumber", "height",
-                "weight", "email", "version", "workStartDate", "actualProfession", "salary", "numberOfProfessions");
+                "weight", "email", "version", "workStartDate", "actualProfession", "salary");
 
         BeanWrapperFieldSetMapperCustom<Employee> fieldSetMapper = new BeanWrapperFieldSetMapperCustom<>();
         fieldSetMapper.setTargetType(Employee.class);

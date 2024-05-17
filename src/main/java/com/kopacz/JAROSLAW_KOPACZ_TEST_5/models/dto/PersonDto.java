@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class PersonDto {
-    String firstName;
-    String lastName;
-    String peselNumber;
-    double height;
-    double weight;
-    String email;
+    private String firstName;
+    private String lastName;
+    private String peselNumber;
+    private double height;
+    private double weight;
+    private String email;
 }

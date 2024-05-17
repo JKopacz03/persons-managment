@@ -17,23 +17,20 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @DiscriminatorValue("employee")
-@Component
-public class Employee extends Person implements Personable {
+public class Employee extends Person {
     private LocalDate workStartDate;
     private String actualProfession;
     private BigDecimal salary;
-    private int numberOfProfessions;
     @OneToMany(
             mappedBy = "employee"
     )
     private Set<Position> positions;
 
-    public Employee(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary, int numberOfProfessions) {
+    public Employee(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);
         this.workStartDate = workStartDate;
         this.actualProfession = actualProfession;
         this.salary = salary;
-        this.numberOfProfessions = numberOfProfessions;
         this.positions = new HashSet<>();
     }
 

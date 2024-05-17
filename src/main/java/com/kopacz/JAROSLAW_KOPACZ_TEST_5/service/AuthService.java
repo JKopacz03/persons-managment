@@ -19,9 +19,11 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public void save(User user){
+    public AuthDto save(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        final String jwtToken = jwtService.generateToken(user);
+        return new AuthDto(jwtToken);
     }
 
     public AuthDto authenticate(AuthCommand command) {

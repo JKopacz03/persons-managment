@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -15,8 +14,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @DiscriminatorValue("student")
-@Component
-public class Student extends Person implements Personable {
+public class Student extends Person {
     private String college;
     private int academicYear;
     private BigDecimal scholarship;

@@ -196,7 +196,7 @@ public class EmployeeCasePersonControllerTest {
                 .andExpect(jsonPath("$[0].height").value(175.0))
                 .andExpect(jsonPath("$[0].weight").value(80.0))
                 .andExpect(jsonPath("$[0].email").value("johndoe@example.com"))
-                .andExpect(jsonPath("$[0].employeeId").value("7476fbdc-ae7f-4fee-b0f2-c9527f03796d"))
+                .andExpect(jsonPath("$[0].employeeId").value("11"))
                 .andExpect(jsonPath("$[0].workStartDate").value("2022-01-01"))
                 .andExpect(jsonPath("$[0].actualProfession").value("Programmer"))
                 .andExpect(jsonPath("$[0].salary").value(5000.00))
@@ -214,7 +214,7 @@ public class EmployeeCasePersonControllerTest {
                 .andExpect(jsonPath("$[0].height").value(165.0))
                 .andExpect(jsonPath("$[0].weight").value(60.0))
                 .andExpect(jsonPath("$[0].email").value("alicesmith@example.com"))
-                .andExpect(jsonPath("$[0].employeeId").value("d12bec21-0053-4438-adf2-26040f417f74"))
+                .andExpect(jsonPath("$[0].employeeId").value("12"))
                 .andExpect(jsonPath("$[0].workStartDate").value("2022-02-01"))
                 .andExpect(jsonPath("$[0].actualProfession").value("Designer"))
                 .andExpect(jsonPath("$[0].salary").value(4500.00))
@@ -225,7 +225,7 @@ public class EmployeeCasePersonControllerTest {
                 .andExpect(jsonPath("$[1].height").value(180.0))
                 .andExpect(jsonPath("$[1].weight").value(75.0))
                 .andExpect(jsonPath("$[1].email").value("jamesbrown@example.com"))
-                .andExpect(jsonPath("$[1].employeeId").value("bd38d1b9-5bed-4ecb-8c31-bfd9dfb6c724"))
+                .andExpect(jsonPath("$[1].employeeId").value("13"))
                 .andExpect(jsonPath("$[1].workStartDate").value("2022-03-01"))
                 .andExpect(jsonPath("$[1].actualProfession").value("Manager"))
                 .andExpect(jsonPath("$[1].salary").value(6000.00))
@@ -236,7 +236,7 @@ public class EmployeeCasePersonControllerTest {
                 .andExpect(jsonPath("$[2].height").value(170.0))
                 .andExpect(jsonPath("$[2].weight").value(65.0))
                 .andExpect(jsonPath("$[2].email").value("emmajohnson@example.com"))
-                .andExpect(jsonPath("$[2].employeeId").value("6012bae3-5800-49da-a9e9-701f92c49cf8"))
+                .andExpect(jsonPath("$[2].employeeId").value("14"))
                 .andExpect(jsonPath("$[2].workStartDate").value("2022-04-01"))
                 .andExpect(jsonPath("$[2].actualProfession").value("Analyst"))
                 .andExpect(jsonPath("$[2].salary").value(5500.00))
@@ -247,7 +247,7 @@ public class EmployeeCasePersonControllerTest {
                 .andExpect(jsonPath("$[3].height").value(185.0))
                 .andExpect(jsonPath("$[3].weight").value(90.0))
                 .andExpect(jsonPath("$[3].email").value("michaelwilliams@example.com"))
-                .andExpect(jsonPath("$[3].employeeId").value("31f3141a-edd6-4708-99a1-4d0e947121c0"))
+                .andExpect(jsonPath("$[3].employeeId").value("15"))
                 .andExpect(jsonPath("$[3].workStartDate").value("2022-05-01"))
                 .andExpect(jsonPath("$[3].actualProfession").value("Engineer"))
                 .andExpect(jsonPath("$[3].salary").value(7000.00))
@@ -375,6 +375,7 @@ public class EmployeeCasePersonControllerTest {
         String token = jwtService.generateToken(user);
 
         EmployeeEditCommand employeeEditCommandCommand = new EmployeeEditCommand(
+                12L,
                 "Alice",
                 "Smith",
                 "81020223456",
@@ -388,7 +389,7 @@ public class EmployeeCasePersonControllerTest {
         );
         String json = objectMapper.writeValueAsString(employeeEditCommandCommand);
 
-        mockMvc.perform(put("/person/d12bec21-0053-4438-adf2-26040f417f74")
+        mockMvc.perform(put("/person/12")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

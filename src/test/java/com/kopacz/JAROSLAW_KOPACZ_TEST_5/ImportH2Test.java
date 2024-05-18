@@ -56,7 +56,7 @@ public class ImportH2Test {
                         .header("Authorization", format("Bearer %s", token)))
                 .andExpect(status().isAccepted());
 
-        Thread.sleep(15000);
+        Thread.sleep(3500);
 
         if (databaseUtils.countRecordsInDatabase() != 100015) {
             Assertions.fail("Missing imports");

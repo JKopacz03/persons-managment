@@ -8,8 +8,8 @@ import java.util.UUID;
 public class PensionerCsvGenerator {
 
     public static void main(String[] args) {
-        String filename = "src/main/resources/test/testingCsv/invalidPensioners.csv";
-        generateCSV(filename, 5000);
+        String filename = "src/main/resources/test/testingCsv/pensioners.csv";
+        generateCSV(filename, 100000);
     }
 
     public static void generateCSV(String filename, int numberOfRows) {
@@ -17,7 +17,7 @@ public class PensionerCsvGenerator {
             writer.write("type,id,firstName,lastName,peselNumber,height,weight,email,version,pensionValue,workYears\n");
 
             for (int i = 0; i < numberOfRows; i++) {
-                String id = UUID.randomUUID().toString();
+                int id = i+20;
                 String firstName = "Bartek";
                 String lastName = "Maciejoszka";
                 String peselNumber = String.valueOf(51 + i);
@@ -28,7 +28,7 @@ public class PensionerCsvGenerator {
                 double pensionValue = 2000;
                 int workYears = 30;
 
-                writer.write(String.format("pensioner,%s,%s,%s,%s,%.0f,%.0f,%s,%d,%s,%d\n",
+                writer.write(String.format("pensioner,%d,%s,%s,%s,%.0f,%.0f,%s,%d,%s,%d\n",
                         id, firstName, lastName, peselNumber, height, weight, email, version, pensionValue, workYears));
             }
 

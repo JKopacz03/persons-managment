@@ -15,13 +15,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class EmployeeDto extends PersonDto {
-    private UUID employeeId;
+    private Long employeeId;
     private LocalDate workStartDate;
     private String actualProfession;
     private BigDecimal salary;
     private int numberOfPositions;
 
-    public EmployeeDto(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, LocalDate workStartDate, String actualProfession, BigDecimal salary, int numberOfPositions) {
+    public EmployeeDto(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, LocalDate workStartDate, String actualProfession, BigDecimal salary, int numberOfPositions) {
         super(firstName, lastName, peselNumber, height, weight, email);
         this.employeeId = id;
         this.workStartDate = workStartDate;

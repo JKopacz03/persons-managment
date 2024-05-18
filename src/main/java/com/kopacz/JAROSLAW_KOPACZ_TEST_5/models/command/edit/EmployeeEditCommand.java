@@ -15,8 +15,8 @@ public class EmployeeEditCommand extends PersonEditCommand {
     private String actualProfession;
     private BigDecimal salary;
 
-    public EmployeeEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary) {
-        super(firstName, lastName, peselNumber, height, weight, email, version);
+    public EmployeeEditCommand(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary) {
+        super(id, firstName, lastName, peselNumber, height, weight, email, version);
         this.workStartDate = workStartDate;
         this.actualProfession = actualProfession;
         this.salary = salary;

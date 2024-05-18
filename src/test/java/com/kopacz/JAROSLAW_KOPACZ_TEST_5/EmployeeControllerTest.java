@@ -86,7 +86,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.startDate").value("2020-12-22"))
                 .andExpect(jsonPath("$.endDate").value("2021-12-02"))
                 .andExpect(jsonPath("$.salary").value(3000.00))
-                .andExpect(jsonPath("$.employee").value("bd38d1b9-5bed-4ecb-8c31-bfd9dfb6c724"));
+                .andExpect(jsonPath("$.employee").value("13"));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.startDate").value("2012-12-22"))
                 .andExpect(jsonPath("$.endDate").value("2013-12-02"))
                 .andExpect(jsonPath("$.salary").value(3000.00))
-                .andExpect(jsonPath("$.employee").value("bd38d1b9-5bed-4ecb-8c31-bfd9dfb6c724"));
+                .andExpect(jsonPath("$.employee").value("13"));
 
 
 
@@ -165,7 +165,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.startDate").value("2012-12-22"))
                 .andExpect(jsonPath("$.endDate").value("2013-12-02"))
                 .andExpect(jsonPath("$.salary").value(3000.00))
-                .andExpect(jsonPath("$.employee").value("bd38d1b9-5bed-4ecb-8c31-bfd9dfb6c724"));
+                .andExpect(jsonPath("$.employee").value("13"));
 
 
 
@@ -209,7 +209,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.startDate").value("2012-12-22"))
                 .andExpect(jsonPath("$.endDate").value("2013-12-02"))
                 .andExpect(jsonPath("$.salary").value(3000.00))
-                .andExpect(jsonPath("$.employee").value("bd38d1b9-5bed-4ecb-8c31-bfd9dfb6c724"));
+                .andExpect(jsonPath("$.employee").value("13"));
 
 
 
@@ -253,7 +253,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.startDate").value("2012-12-22"))
                 .andExpect(jsonPath("$.endDate").value("2013-12-02"))
                 .andExpect(jsonPath("$.salary").value(3000.00))
-                .andExpect(jsonPath("$.employee").value("bd38d1b9-5bed-4ecb-8c31-bfd9dfb6c724"));
+                .andExpect(jsonPath("$.employee").value("13"));
 
 
 

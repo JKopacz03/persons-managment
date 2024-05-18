@@ -14,11 +14,10 @@ public class StudentEditCommand extends PersonEditCommand {
     private int academicYear;
     private BigDecimal scholarship;
 
-    public StudentEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, String college, int academicYear, BigDecimal scholarship) {
-        super(firstName, lastName, peselNumber, height, weight, email, version);
+    public StudentEditCommand(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, String college, int academicYear, BigDecimal scholarship) {
+        super(id, firstName, lastName, peselNumber, height, weight, email, version);
         this.college = college;
         this.academicYear = academicYear;
         this.scholarship = scholarship;
     }
-
 }

@@ -31,7 +31,7 @@
 
     <changeSet id="2" author="jarek">
         <createTable tableName="position">
-            <column name="id" type="uuid">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)" />

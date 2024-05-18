@@ -277,6 +277,7 @@ public class StudentCasePersonControllerTest {
         String token = jwtService.generateToken(user);
 
         StudentEditCommand studentCommand = new StudentEditCommand(
+                2L,
                 "Josh",
                 "Smith",
                 "73620954782",
@@ -290,7 +291,7 @@ public class StudentCasePersonControllerTest {
         );
         String json = objectMapper.writeValueAsString(studentCommand);
 
-        mockMvc.perform(put("/person/ef91ab8c-fa63-42c3-8ab6-4382106893bf")
+        mockMvc.perform(put("/person/2")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

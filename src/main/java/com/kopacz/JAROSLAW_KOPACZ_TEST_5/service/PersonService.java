@@ -31,7 +31,7 @@ public class PersonService {
         return strategy.findAll(params, pageable);
     }
 
-    public void edit(String peselNumber, PersonEditCommand command) {
+    public void edit(Long peselNumber, PersonEditCommand command) {
         PersonEditStrategy strategy = personFactory.createEditService(command);
         strategy.edit(peselNumber, command);
     }

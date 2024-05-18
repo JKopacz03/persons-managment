@@ -3,53 +3,53 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-<!--    <changeSet id="load-student-data" author="admin">-->
-<!--        <loadData encoding="UTF-8" file="test/changesets/data/students.csv" quotchar="&quot;" separator="," tableName="person">-->
-<!--            <column header="id" name="id"/>-->
-<!--            <column header="first_name" name="first_name"/>-->
-<!--            <column header="last_name" name="last_name" />-->
-<!--            <column header="pesel_number" name="pesel_number"/>-->
-<!--            <column header="height" name="height"/>-->
-<!--            <column header="weight" name="weight"/>-->
-<!--            <column header="email" name="email" />-->
-<!--            <column header="college" name="college" />-->
-<!--            <column header="academic_year" name="academic_year" />-->
-<!--            <column header="scholarship" name="scholarship"/>-->
-<!--            <column header="type" name="type"/>-->
-<!--            <column header="version" name="version"/>-->
-<!--        </loadData>-->
-<!--    </changeSet>-->
+    <changeSet id="load-student-data" author="admin">
+        <loadData encoding="UTF-8" file="test/changesets/data/students.csv" quotchar="&quot;" separator="," tableName="person">
+            <column header="id" name="id"/>
+            <column header="first_name" name="first_name"/>
+            <column header="last_name" name="last_name" />
+            <column header="pesel_number" name="pesel_number"/>
+            <column header="height" name="height"/>
+            <column header="weight" name="weight"/>
+            <column header="email" name="email" />
+            <column header="college" name="college" />
+            <column header="academic_year" name="academic_year" />
+            <column header="scholarship" name="scholarship"/>
+            <column header="type" name="type"/>
+            <column header="version" name="version"/>
+        </loadData>
+    </changeSet>
 
-<!--    <changeSet id="load-pensioner-data" author="admin">-->
-<!--        <loadData encoding="UTF-8" file="test/changesets/data/pensioners.csv" quotchar="&quot;" separator="," tableName="person">-->
-<!--            <column header="id" name="id"/>-->
-<!--            <column header="first_name" name="first_name"/>-->
-<!--            <column header="last_name" name="last_name" />-->
-<!--            <column header="pesel_number" name="pesel_number"/>-->
-<!--            <column header="height" name="height"/>-->
-<!--            <column header="weight" name="weight"/>-->
-<!--            <column header="email" name="email" />-->
-<!--            <column header="pension_value" name="pension_value" />-->
-<!--            <column header="work_years" name="work_years" />-->
-<!--            <column header="type" name="type"/>-->
-<!--        </loadData>-->
-<!--    </changeSet>-->
+    <changeSet id="load-pensioner-data" author="admin">
+        <loadData encoding="UTF-8" file="test/changesets/data/pensioners.csv" quotchar="&quot;" separator="," tableName="person">
+            <column header="id" name="id"/>
+            <column header="first_name" name="first_name"/>
+            <column header="last_name" name="last_name" />
+            <column header="pesel_number" name="pesel_number"/>
+            <column header="height" name="height"/>
+            <column header="weight" name="weight"/>
+            <column header="email" name="email" />
+            <column header="pension_value" name="pension_value" />
+            <column header="work_years" name="work_years" />
+            <column header="type" name="type"/>
+        </loadData>
+    </changeSet>
 
-<!--    <changeSet id="load-employee-data" author="admin">-->
-<!--        <loadData encoding="UTF-8" file="test/changesets/data/employees.csv" quotchar="&quot;" separator="," tableName="person">-->
-<!--            <column header="id" name="id"/>-->
-<!--            <column header="first_name" name="first_name"/>-->
-<!--            <column header="last_name" name="last_name" />-->
-<!--            <column header="pesel_number" name="pesel_number"/>-->
-<!--            <column header="height" name="height"/>-->
-<!--            <column header="weight" name="weight"/>-->
-<!--            <column header="email" name="email" />-->
-<!--            <column header="work_start_date" name="work_start_date" />-->
-<!--            <column header="actual_profession" name="actual_profession" />-->
-<!--            <column header="salary" name="salary"/>-->
-<!--            <column header="type" name="type"/>-->
-<!--        </loadData>-->
-<!--    </changeSet>-->
+    <changeSet id="load-employee-data" author="admin">
+        <loadData encoding="UTF-8" file="test/changesets/data/employees.csv" quotchar="&quot;" separator="," tableName="person">
+            <column header="id" name="id"/>
+            <column header="first_name" name="first_name"/>
+            <column header="last_name" name="last_name" />
+            <column header="pesel_number" name="pesel_number"/>
+            <column header="height" name="height"/>
+            <column header="weight" name="weight"/>
+            <column header="email" name="email" />
+            <column header="work_start_date" name="work_start_date" />
+            <column header="actual_profession" name="actual_profession" />
+            <column header="salary" name="salary"/>
+            <column header="type" name="type"/>
+        </loadData>
+    </changeSet>
 
     <changeSet id="load-user-data" author="admin">
         <loadData encoding="UTF-8" file="test/changesets/data/users.csv" quotchar="&quot;" separator="," tableName="users">
@@ -60,15 +60,15 @@
         </loadData>
     </changeSet>
 
-<!--    <changeSet id="load-position-data" author="admin">-->
-<!--        <loadData encoding="UTF-8" file="test/changesets/data/positions.csv" quotchar="&quot;" separator="," tableName="position">-->
-<!--            <column header="id" name="id"/>-->
-<!--            <column header="name" name="name"/>-->
-<!--            <column header="start_date" name="start_date"/>-->
-<!--            <column header="end_date" name="end_date"/>-->
-<!--            <column header="salary" name="salary"/>-->
-<!--            <column header="employee_id" name="employee_id"/>-->
-<!--        </loadData>-->
-<!--    </changeSet>-->
+    <changeSet id="load-position-data" author="admin">
+        <loadData encoding="UTF-8" file="test/changesets/data/positions.csv" quotchar="&quot;" separator="," tableName="position">
+            <column header="id" name="id"/>
+            <column header="name" name="name"/>
+            <column header="start_date" name="start_date"/>
+            <column header="end_date" name="end_date"/>
+            <column header="salary" name="salary"/>
+            <column header="employee_id" name="employee_id"/>
+        </loadData>
+    </changeSet>
 
 </databaseChangeLog>

@@ -13,12 +13,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class PositionDto {
-    private UUID positionId;
+    private Long positionId;
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
     private BigDecimal salary;
-    private UUID employee;
+    private Long employee;
 
     public void setEmployee(Employee employee) {
         this.employee = employee.getId();

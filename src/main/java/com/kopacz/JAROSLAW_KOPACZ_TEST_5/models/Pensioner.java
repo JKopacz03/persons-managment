@@ -18,7 +18,7 @@ public class Pensioner extends Person {
     private BigDecimal pensionValue;
     private int workYears;
 
-    public Pensioner(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, BigDecimal pensionValue, int workYears) {
+    public Pensioner(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, BigDecimal pensionValue, int workYears) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);
         this.pensionValue = pensionValue;
         this.workYears = workYears;

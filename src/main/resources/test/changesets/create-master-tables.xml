@@ -5,7 +5,7 @@
 
     <changeSet id="1" author="jarek">
         <createTable tableName="person">
-            <column name="id" type="uuid">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(255)" />
@@ -38,7 +38,7 @@
             <column name="start_date" type="DATE" />
             <column name="end_date" type="DATE" />
             <column name="salary" type="DECIMAL(10,2)"/>
-            <column name="employee_id" type="uuid" />
+            <column name="employee_id" type="BIGINT" />
         </createTable>
 
         <addForeignKeyConstraint baseTableName="position"

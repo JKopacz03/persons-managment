@@ -9,8 +9,8 @@ public class StudentCsvGenerator {
 
     public static void main(String[] args) {
 //        String filename = "src/main/resources/test/testingCsv/students.csv";
-        String filename = "src/main/resources/test/testingCsv/invalidStudents.csv";
-        generateCSV(filename, 5000);
+        String filename = "src/main/resources/test/testingCsv/students.csv";
+        generateCSV(filename, 100000);
     }
 
     public static void generateCSV(String filename, int numberOfRows) {
@@ -18,7 +18,7 @@ public class StudentCsvGenerator {
             writer.write("type,id,firstName,lastName,peselNumber,height,weight,email,version,college,academicYear,scholarship\n");
 
             for (int i = 0; i < numberOfRows; i++) {
-                String id = UUID.randomUUID().toString();
+                int id = i+10;
                 String firstName = "Bartek";
                 String lastName = "Maciejoszka";
                 String peselNumber = String.valueOf(51 + i);
@@ -32,7 +32,7 @@ public class StudentCsvGenerator {
 
                 String scholarshipFormatted = String.format(Locale.US, "%.2f", scholarship);
 
-                writer.write(String.format("student,%s,%s,%s,%s,%.0f,%.0f,%s,%d,%s,%d,%s\n",
+                writer.write(String.format("student,%d,%s,%s,%s,%.0f,%.0f,%s,%d,%s,%d,%s\n",
                         id, firstName, lastName, peselNumber, height, weight, email, version, college, academicYear, scholarshipFormatted));
             }
 

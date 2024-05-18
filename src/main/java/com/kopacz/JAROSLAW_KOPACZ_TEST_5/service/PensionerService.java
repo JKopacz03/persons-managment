@@ -56,7 +56,7 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
     @Override
     public void edit(String id, PersonEditCommand command) {
         Pensioner pensioner = modelMapper.map(command, Pensioner.class);
-        pensioner.setId(UUID.fromString(id));
+//        pensioner.setId(UUID.fromString(id));
         pensionerRepository.saveAndFlush(pensioner);
     }
 

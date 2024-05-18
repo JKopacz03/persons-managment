@@ -19,8 +19,8 @@ import java.util.UUID;
 @DiscriminatorColumn(name="type", discriminatorType = DiscriminatorType.STRING)
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String firstName;
     private String lastName;
     private String peselNumber;

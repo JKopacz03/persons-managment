@@ -19,16 +19,16 @@ public class StudentCsvGenerator {
 
             for (int i = 0; i < numberOfRows; i++) {
                 int id = i+10;
-                String firstName = "Bartek";
-                String lastName = "Maciejoszka";
+                String firstName = "Jo";
+                String lastName = "Do";
                 String peselNumber = String.valueOf(51 + i);
                 double height = 170 + Math.random() * 30;
                 double weight = 60 + Math.random() * 40;
-                String email = "jankowal@gmail.com";
+                String email = "j@j.pl";
                 int version = 1;
-                String college = "janapawla";
+                String college = "ITC";
                 int academicYear = (int) (1 + Math.random() * 5);
-                double scholarship = 20000 + Math.random() * 80000;
+                double scholarship = 20;
 
                 String scholarshipFormatted = String.format(Locale.US, "%.2f", scholarship);
 

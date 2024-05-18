@@ -1,6 +1,6 @@
 id,first_name,last_name,pesel_number,height,weight,email,work_start_date,actual_profession,salary,type,version
-7476fbdc-ae7f-4fee-b0f2-c9527f03796d,John,Doe,80010112345,175,80,johndoe@example.com,2022-01-01,Programmer,5000,employee,1
-d12bec21-0053-4438-adf2-26040f417f74,Alice,Smith,81020223456,165,60,alicesmith@example.com,2022-02-01,Designer,4500,employee,1
-bd38d1b9-5bed-4ecb-8c31-bfd9dfb6c724,James,Brown,82030334567,180,75,jamesbrown@example.com,2022-03-01,Manager,6000,employee,1
-6012bae3-5800-49da-a9e9-701f92c49cf8,Emma,Johnson,83040445678,170,65,emmajohnson@example.com,2022-04-01,Analyst,5500,employee,1
-31f3141a-edd6-4708-99a1-4d0e947121c0,Michael,Williams,84050556789,185,90,michaelwilliams@example.com,2022-05-01,Engineer,7000,employee,1
+11,John,Doe,80010112345,175,80,johndoe@example.com,2022-01-01,Programmer,5000,employee,1
+12,Alice,Smith,81020223456,165,60,alicesmith@example.com,2022-02-01,Designer,4500,employee,1
+13,James,Brown,82030334567,180,75,jamesbrown@example.com,2022-03-01,Manager,6000,employee,1
+14,Emma,Johnson,83040445678,170,65,emmajohnson@example.com,2022-04-01,Analyst,5500,employee,1
+15,Michael,Williams,84050556789,185,90,michaelwilliams@example.com,2022-05-01,Engineer,7000,employee,1

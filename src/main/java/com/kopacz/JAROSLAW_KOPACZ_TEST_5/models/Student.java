@@ -19,7 +19,7 @@ public class Student extends Person {
     private int academicYear;
     private BigDecimal scholarship;
 
-    public Student(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, String college, int academicYear, BigDecimal scholarship) {
+    public Student(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, String college, int academicYear, BigDecimal scholarship) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);
         this.college = college;
         this.academicYear = academicYear;

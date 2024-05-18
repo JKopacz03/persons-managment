@@ -17,8 +17,8 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "id")
 public class Position {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;

@@ -14,8 +14,8 @@ public class PensionerEditCommand extends PersonEditCommand {
     private BigDecimal pensionValue;
     private int workYears;
 
-    public PensionerEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, BigDecimal pensionValue, int workYears) {
-        super(firstName, lastName, peselNumber, height, weight, email, version);
+    public PensionerEditCommand(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version, BigDecimal pensionValue, int workYears) {
+        super(id, firstName, lastName, peselNumber, height, weight, email, version);
         this.pensionValue = pensionValue;
         this.workYears = workYears;
     }

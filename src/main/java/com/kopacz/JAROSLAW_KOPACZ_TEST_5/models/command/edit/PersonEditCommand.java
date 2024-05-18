@@ -1,6 +1,7 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.edit;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
         property = "@class"
 )
 public abstract class PersonEditCommand {
+    @Min(value = 1, message = "id is mandatory")
+    private Long id;
     private String firstName;
     private String lastName;
     private String peselNumber;
@@ -20,7 +23,8 @@ public abstract class PersonEditCommand {
     private String email;
     private Integer version;
 
-    public PersonEditCommand(String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version) {
+    public PersonEditCommand(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, Integer version) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.peselNumber = peselNumber;

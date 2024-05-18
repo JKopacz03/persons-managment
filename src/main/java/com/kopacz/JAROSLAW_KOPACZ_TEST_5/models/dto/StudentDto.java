@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class StudentDto extends PersonDto {
-    private UUID studentId;
+    private Long studentId;
     private String college;
     private int academicYear;
     private BigDecimal scholarship;

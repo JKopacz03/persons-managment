@@ -265,6 +265,7 @@ public class PensionerCasePersonControllerTest {
         String token = jwtService.generateToken(user);
 
         PensionerEditCommand pensionerCommand = new PensionerEditCommand(
+                6L,
                 "John",
                 "Doe",
                 "91010112345",
@@ -277,7 +278,7 @@ public class PensionerCasePersonControllerTest {
         );
         String json = objectMapper.writeValueAsString(pensionerCommand);
 
-        mockMvc.perform(put("/person/6d219edf-9ba8-43ff-a005-76d0de187779")
+        mockMvc.perform(put("/person/6")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

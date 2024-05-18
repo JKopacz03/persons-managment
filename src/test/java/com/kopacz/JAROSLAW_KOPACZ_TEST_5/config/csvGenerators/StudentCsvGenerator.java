@@ -18,21 +18,21 @@ public class StudentCsvGenerator {
             writer.write("type,id,firstName,lastName,peselNumber,height,weight,email,version,college,academicYear,scholarship\n");
 
             for (int i = 0; i < numberOfRows; i++) {
-                String id = UUID.randomUUID().toString();
-                String firstName = "Bartek";
-                String lastName = "Maciejoszka";
+                int id = i+20;
+                String firstName = "Jo";
+                String lastName = "Do";
                 String peselNumber = String.valueOf(51 + i);
                 double height = 170 + Math.random() * 30;
                 double weight = 60 + Math.random() * 40;
-                String email = "jankowal@gmail.com";
+                String email = "j@j.pl";
                 int version = 1;
-                String college = "janapawla";
+                String college = "ITC";
                 int academicYear = (int) (1 + Math.random() * 5);
-                double scholarship = 20000 + Math.random() * 80000;
+                double scholarship = 20;
 
                 String scholarshipFormatted = String.format(Locale.US, "%.2f", scholarship);
 
-                writer.write(String.format("student,%s,%s,%s,%s,%.0f,%.0f,%s,%d,%s,%d,%s\n",
+                writer.write(String.format("student,%d,%s,%s,%s,%.0f,%.0f,%s,%d,%s,%d,%s\n",
                         id, firstName, lastName, peselNumber, height, weight, email, version, college, academicYear, scholarshipFormatted));
             }
 

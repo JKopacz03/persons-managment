@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class PensionerDto extends PersonDto {
-    private UUID pensioner_id;
+    private Long pensionerId;
     private BigDecimal pensionValue;
     private int workYears;
 }

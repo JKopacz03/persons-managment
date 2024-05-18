@@ -26,7 +26,7 @@ public class Employee extends Person {
     )
     private Set<Position> positions;
 
-    public Employee(UUID id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary) {
+    public Employee(Long id, String firstName, String lastName, String peselNumber, double height, double weight, String email, String type, Integer version, LocalDate workStartDate, String actualProfession, BigDecimal salary) {
         super(id, firstName, lastName, peselNumber, height, weight, email, type, version);
         this.workStartDate = workStartDate;
         this.actualProfession = actualProfession;

@@ -54,9 +54,8 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
 
     @Transactional
     @Override
-    public void edit(String id, PersonEditCommand command) {
+    public void edit(Long id, PersonEditCommand command) {
         Student student = modelMapper.map(command, Student.class);
-        student.setId(UUID.fromString(id));
         studentRepository.saveAndFlush(student);
     }
     @Override

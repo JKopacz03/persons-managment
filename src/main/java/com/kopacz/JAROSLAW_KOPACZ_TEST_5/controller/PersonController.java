@@ -45,7 +45,7 @@ public class PersonController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> edit(@PathVariable("id") String id,
+    public ResponseEntity<Void> edit(@PathVariable("id") Long id,
                                      @Valid @RequestBody PersonEditCommand command) {
         personService.edit(id, command);
         return ResponseEntity.ok().build();

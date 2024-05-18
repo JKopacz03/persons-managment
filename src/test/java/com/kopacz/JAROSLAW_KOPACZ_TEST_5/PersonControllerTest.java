@@ -478,6 +478,7 @@ public class PersonControllerTest {
 
 
         EmployeeEditCommand employeeEditCommandCommand = new EmployeeEditCommand(
+                12L,
                 "Alice",
                 "Smith",
                 "81020223456",
@@ -491,7 +492,7 @@ public class PersonControllerTest {
         );
         String json = objectMapper.writeValueAsString(employeeEditCommandCommand);
 
-        mockMvc.perform(put("/person/d12bec21-0053-4438-adf2-26040f417f74")
+        mockMvc.perform(put("/person/12")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -504,6 +505,7 @@ public class PersonControllerTest {
         String token = jwtService.generateToken(user);
 
         EmployeeEditCommand employeeEditCommandCommand = new EmployeeEditCommand(
+                12L,
                 "Alice",
                 "Smith",
                 "81020223456",
@@ -517,7 +519,7 @@ public class PersonControllerTest {
         );
         String json = objectMapper.writeValueAsString(employeeEditCommandCommand);
 
-        mockMvc.perform(put("/person/d12bec21-0053-4438-adf2-26040f417f74")
+        mockMvc.perform(put("/person/12")
                         .header("Authorization", format("Bearer %s", token))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

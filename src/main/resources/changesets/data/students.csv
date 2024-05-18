@@ -1,6 +1,6 @@
 id,first_name,last_name,pesel_number,height,weight,email,college,academic_year,scholarship,type,version
-8cec64fa-b8ca-4017-8fa3-bd30a791c987,John,Doe,73620954781,180,75,johndoe@example.com,Harvard University,3,1500.00,student,1
-ef91ab8c-fa63-42c3-8ab6-4382106893bf,Jane,Smith,73620954782,165,60,janesmith@example.com,Stanford University,4,1800.00,student,1
-a1938f90-53d9-47d0-b62b-d9e6cf9b39c5,Michael,Johnson,73620954783,190,80,michaeljohnson@example.com,MIT,2,1200.00,student,1
-e1c9732f-4411-47fa-9f48-c7fcf433f66f,Emily,Williams,73620954784,170,65,emilywilliams@example.com,Yale University,3,1600.00,student,1
-ef86c51c-3fbc-4069-a3c9-4bcaaeeef3a6,David,Brown,73620954785,175,70,davidbrown@example.com,Columbia University,4,2000.00,student,1
+1,John,Doe,73620954781,180,75,johndoe@example.com,Harvard University,3,1500.00,student,1
+2,Jane,Smith,73620954782,165,60,janesmith@example.com,Stanford University,4,1800.00,student,1
+3,Michael,Johnson,73620954783,190,80,michaeljohnson@example.com,MIT,2,1200.00,student,1
+4,Emily,Williams,73620954784,170,65,emilywilliams@example.com,Yale University,3,1600.00,student,1
+5,David,Brown,73620954785,175,70,davidbrown@example.com,Columbia University,4,2000.00,student,1

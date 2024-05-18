@@ -64,9 +64,8 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
 
     @Override
     @Transactional
-    public void edit(String id, PersonEditCommand command) {
+    public void edit(Long id, PersonEditCommand command) {
         Employee employee = modelMapper.map(command, Employee.class);
-        employee.setId(UUID.fromString(id));
         employeeRepository.saveAndFlush(employee);
     }
 

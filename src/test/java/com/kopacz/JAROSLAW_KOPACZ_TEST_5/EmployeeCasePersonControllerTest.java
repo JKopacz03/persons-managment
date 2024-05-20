@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +31,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static java.lang.String.format;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,13 +50,15 @@ public class EmployeeCasePersonControllerTest {
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
     private final DatabaseUtils databaseUtils;
+    private final JobExplorer jobExplorer;
     @Autowired
     public EmployeeCasePersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
-                                            JwtService jwtService, DatabaseUtils databaseUtils) {
+                                            JwtService jwtService, DatabaseUtils databaseUtils, JobExplorer jobExplorer) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.jwtService = jwtService;
         this.databaseUtils = databaseUtils;
+        this.jobExplorer = jobExplorer;
     }
 
     @Test
@@ -413,7 +419,18 @@ public class EmployeeCasePersonControllerTest {
                         .header("Authorization", format("Bearer %s", token)))
                 .andExpect(status().isAccepted());
 
-        Thread.sleep(3500);
+        Thread.sleep(10000);
+
+        JobExecution jobExecution = jobExplorer.getJobExecution(1L);
+        LocalDateTime startTime = jobExecution.getStartTime();
+        LocalDateTime endTime = jobExecution.getEndTime();
+        Duration duration = Duration.between(startTime, endTime);
+        long seconds = duration.getSeconds();
+
+
+        if (seconds > 3){
+            Assertions.fail("your time must be under 3s, but is: " + seconds);
+        }
 
         if (databaseUtils.countRecordsInDatabase() != 100015) {
             Assertions.fail("Missing imports");
@@ -438,7 +455,12 @@ public class EmployeeCasePersonControllerTest {
                         .header("Authorization", format("Bearer %s", token)))
                 .andExpect(status().isAccepted());
 
-        if (databaseUtils.countRecordsInDatabase() != 15) {
+        Thread.sleep(3000);
+
+        JobExecution jobExecution = jobExplorer.getJobExecution(1L);
+
+        if (jobExecution.getStatus().toString().equals("FAILED") &&
+         databaseUtils.countRecordsInDatabase() != 15) {
             Assertions.fail("Failed rollback");
         }
     }

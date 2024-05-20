@@ -5,7 +5,7 @@
 
     <changeSet id="1234" author="admin">
         <sqlFile encoding="utf8"
-                 path="classpath:/org/springframework/batch/core/schema-postgresql.sql"
+                 path="classpath:/org/springframework/batch/core/schema-h2.sql"
                  relativeToChangelogFile="false"
                  splitStatements="true"
                  stripComments="true"/>

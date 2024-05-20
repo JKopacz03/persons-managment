@@ -40,38 +40,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @PersonsTest
-@ActiveProfiles("test")
+@ActiveProfiles("testH2")
 @SpringBootTest
 @Testcontainers
 public class PersonControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
-    private final DatabaseUtils databaseUtils;
     @Autowired
     public PersonControllerTest(MockMvc mockMvc, ObjectMapper objectMapper,
-                                JwtService jwtService, DatabaseUtils databaseUtils) {
+                                JwtService jwtService) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.jwtService = jwtService;
-        this.databaseUtils = databaseUtils;
     }
-
-    @Container
-    private static PostgreSQLContainer<?> postgreSQLContainer =
-            new PostgreSQLContainer<>("postgres:15-alpine3.18")
-                    .withDatabaseName("exchange")
-                    .withPassword("qwerty")
-                    .withUsername("postgres");
-
-    @DynamicPropertySource
-    public static void containerConfig(DynamicPropertyRegistry registry){
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-    }
-
-
     @Test
     void badType_shouldBadRequest() throws Exception {
 

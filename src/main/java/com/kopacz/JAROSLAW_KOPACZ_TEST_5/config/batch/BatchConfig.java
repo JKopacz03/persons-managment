@@ -16,26 +16,17 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @RequiredArgsConstructor
 public class BatchConfig {
     private final JobRepository jobRepository;
-//    @Bean
-//    public TaskExecutor asyncTaskExecutor() {
-//        SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-//        taskExecutor.setConcurrencyLimit(10);
-//        return taskExecutor;
-//    }
-
     @Bean
-    public ThreadPoolTaskExecutor taskExecutor(){
-        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-            threadPoolTaskExecutor.setCorePoolSize(10);
-            threadPoolTaskExecutor.setQueueCapacity(15);
-            threadPoolTaskExecutor.setThreadNamePrefix("chuj");
-            return threadPoolTaskExecutor;
+    public TaskExecutor asyncTaskExecutor() {
+        SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
+        taskExecutor.setConcurrencyLimit(10);
+        return taskExecutor;
     }
 
     @Bean
     public JobLauncher jobLauncher() {
         TaskExecutorJobLauncher jobLauncher = new TaskExecutorJobLauncher();
-        jobLauncher.setTaskExecutor(taskExecutor());
+        jobLauncher.setTaskExecutor(asyncTaskExecutor());
         jobLauncher.setJobRepository(jobRepository);
         return jobLauncher;
     }

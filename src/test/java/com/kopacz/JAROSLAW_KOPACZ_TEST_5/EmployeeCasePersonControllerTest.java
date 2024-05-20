@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @PersonsTest
-@ActiveProfiles("test")
+@ActiveProfiles("testH2")
 @SpringBootTest
 @Testcontainers
 public class EmployeeCasePersonControllerTest {
@@ -411,7 +411,7 @@ public class EmployeeCasePersonControllerTest {
 
     @Test
     @ClearContext
-    public void shouldImport100kEmployeesUnder15s() throws Exception {
+    public void shouldImport100kEmployeesUnder3s() throws Exception {
         User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
         String token = jwtService.generateToken(user);
 
@@ -427,7 +427,7 @@ public class EmployeeCasePersonControllerTest {
                         .header("Authorization", format("Bearer %s", token)))
                 .andExpect(status().isAccepted());
 
-        Thread.sleep(15000);
+        Thread.sleep(3500);
 
         if (databaseUtils.countRecordsInDatabase() != 100015) {
             Assertions.fail("Missing imports");

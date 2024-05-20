@@ -53,20 +53,6 @@ public class PensionerCasePersonControllerTest {
         this.databaseUtils = databaseUtils;
     }
 
-    @Container
-    private static PostgreSQLContainer<?> postgreSQLContainer =
-            new PostgreSQLContainer<>("postgres:15-alpine3.18")
-                    .withDatabaseName("exchange")
-                    .withPassword("qwerty")
-                    .withUsername("postgres");
-
-    @DynamicPropertySource
-    public static void containerConfig(DynamicPropertyRegistry registry){
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-    }
-
     @Test
     void shouldReturnsPensionersWorkYearsFrom40() throws Exception {
 

@@ -53,20 +53,6 @@ public class StudentCasePersonControllerTest {
         this.databaseUtils = databaseUtils;
     }
 
-    @Container
-    private static PostgreSQLContainer<?> postgreSQLContainer =
-            new PostgreSQLContainer<>("postgres:15-alpine3.18")
-                    .withDatabaseName("exchange")
-                    .withPassword("qwerty")
-                    .withUsername("postgres");
-
-    @DynamicPropertySource
-    public static void containerConfig(DynamicPropertyRegistry registry){
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-    }
-
     @Test
     void shouldReturnsStudentsByCollege() throws Exception {
 
@@ -313,7 +299,7 @@ public class StudentCasePersonControllerTest {
 
     @Test
     @ClearContext
-    public void shouldImport100kStudentsUnder3s() throws Exception {
+    public void shouldImport100kStudentsUnder3p5s() throws Exception {
         User user = new User(null, "importer", "qwerty", UserRole.IMPORTER);
         String token = jwtService.generateToken(user);
 

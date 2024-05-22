@@ -427,7 +427,6 @@ public class EmployeeCasePersonControllerTest {
         Duration duration = Duration.between(startTime, endTime);
         long seconds = duration.getSeconds();
 
-
         if (seconds > 3){
             Assertions.fail("your time must be under 3s, but is: " + seconds);
         }
@@ -461,7 +460,7 @@ public class EmployeeCasePersonControllerTest {
 
         if (jobExecution.getStatus().toString().equals("FAILED") &&
          databaseUtils.countRecordsInDatabase() != 15) {
-            Assertions.fail("Failed rollback");
+            Assertions.fail("Failed rollback: " + databaseUtils.countRecordsInDatabase());
         }
     }
 

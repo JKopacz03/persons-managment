@@ -1,10 +1,12 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.batch;
 
+import jakarta.servlet.http.PushBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -29,5 +31,10 @@ public class BatchConfig {
         jobLauncher.setTaskExecutor(asyncTaskExecutor());
         jobLauncher.setJobRepository(jobRepository);
         return jobLauncher;
+    }
+
+    @Bean
+    public ExecutionContext executionContext(){
+        return new ExecutionContext();
     }
 }

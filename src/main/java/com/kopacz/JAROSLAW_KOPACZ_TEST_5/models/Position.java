@@ -30,16 +30,4 @@ public class Position {
             name = "employee_id"
     )
     private Employee employee;
-
-    @Override
-    public String toString() {
-        return "Position{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", salary=" + salary +
-                ", employee=" + employee.getId() +
-                '}';
-    }
 }

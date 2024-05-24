@@ -6,5 +6,5 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.UUID;
 
-public interface StudentRepository extends JpaRepository<Student, UUID>, QuerydslPredicateExecutor<Student> {
+public interface StudentRepository extends JpaRepository<Student, Long>, QuerydslPredicateExecutor<Student> {
 }

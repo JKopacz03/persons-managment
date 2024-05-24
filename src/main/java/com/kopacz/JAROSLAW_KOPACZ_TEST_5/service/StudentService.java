@@ -20,6 +20,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
     private final JobLauncher jobLauncher;
     private String TEMP_STORAGE = "/src/main/resources/imports";
     private String TEMP_STORAGE_ABSOLUTE;
+    private final ExecutionContext jobExecutionContext;
 
     @Override
     public PersonDto save(PersonCommand personCommand) {
@@ -133,8 +135,8 @@ public class StudentService implements PersonEditStrategy, PersonFindAllStrategy
             multipartFile.transferTo(fileToImport);
 
             JobParameters jobParameters = new JobParametersBuilder()
-                    .addString("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName)
                     .addLong("startAt", System.currentTimeMillis()).toJobParameters();
+            jobExecutionContext.put("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName);
 
             JobExecution job = jobLauncher.run(this.job, jobParameters);
 

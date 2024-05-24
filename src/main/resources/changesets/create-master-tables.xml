@@ -5,13 +5,13 @@
 
     <changeSet id="1" author="jarek">
         <createTable tableName="person">
-            <column name="id" type="uuid">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(255)" />
             <column name="last_name" type="VARCHAR(255)" />
             <column name="pesel_number" type="VARCHAR(255)">
-               <constraints unique="true"/>
+                <constraints unique="true"/>
             </column>
             <column name="height" type="DECIMAL(10,2)"/>
             <column name="weight" type="DECIMAL(10,2)"/>
@@ -31,14 +31,14 @@
 
     <changeSet id="2" author="jarek">
         <createTable tableName="position">
-            <column name="id" type="uuid">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)" />
             <column name="start_date" type="DATE" />
             <column name="end_date" type="DATE" />
             <column name="salary" type="DECIMAL(10,2)"/>
-            <column name="employee_id" type="uuid" />
+            <column name="employee_id" type="BIGINT" />
         </createTable>
 
         <addForeignKeyConstraint baseTableName="position"

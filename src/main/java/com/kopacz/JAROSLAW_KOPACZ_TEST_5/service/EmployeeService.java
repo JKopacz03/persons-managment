@@ -195,7 +195,6 @@ public class EmployeeService implements PersonEditStrategy, PersonFindAllStrateg
             multipartFile.transferTo(fileToImport);
 
             JobParameters jobParameters = new JobParametersBuilder()
-                    .addString("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName)
                     .addLong("startAt", System.currentTimeMillis()).toJobParameters();
             jobExecutionContext.put("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName);
 

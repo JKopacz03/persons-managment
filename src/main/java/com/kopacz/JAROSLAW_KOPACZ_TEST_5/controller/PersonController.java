@@ -31,7 +31,7 @@ public class PersonController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/find")
-    public ResponseEntity<List<? extends PersonDto>> find(@Valid TypeCommand type,
+    public ResponseEntity<List<? extends PersonDto>> find(@RequestParam(required = false) String type,
                                                           @RequestParam Map<String, String> params,
                                                           @PageableDefault Pageable pageable) {
       return new ResponseEntity<>(personService.findAll(type, params, pageable), HttpStatus.OK);

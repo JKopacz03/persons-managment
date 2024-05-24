@@ -20,6 +20,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,7 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
     private final JobLauncher jobLauncher;
     private String TEMP_STORAGE = "/src/main/resources/imports/";
     private String TEMP_STORAGE_ABSOLUTE;
+    private final ExecutionContext jobExecutionContext;
 
 
 
@@ -132,8 +134,8 @@ public class PensionerService implements PersonEditStrategy, PersonFindAllStrate
             multipartFile.transferTo(fileToImport);
 
             JobParameters jobParameters = new JobParametersBuilder()
-                    .addString("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName)
                     .addLong("startAt", System.currentTimeMillis()).toJobParameters();
+            jobExecutionContext.put("fullPathFileName", TEMP_STORAGE_ABSOLUTE + originalFileName);
 
             JobExecution job = jobLauncher.run(this.job, jobParameters);
 

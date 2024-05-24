@@ -3,4 +3,4 @@ id,first_name,last_name,pesel_number,height,weight,email,work_start_date,actual_
 12,Alice,Smith,81020223456,165,60,alicesmith@example.com,2022-02-01,Designer,4500,employee,1
 13,James,Brown,82030334567,180,75,jamesbrown@example.com,2022-03-01,Manager,6000,employee,1
 14,Emma,Johnson,83040445678,170,65,emmajohnson@example.com,2022-04-01,Analyst,5500,employee,1
-15a,Michael,Williams,84050556789,185,90,michaelwilliams@example.com,2022-05-01,Engineer,7000,employee,1
+15,Michael,Williams,84050556789,185,90,michaelwilliams@example.com,2022-05-01,Engineer,7000,employee,1

@@ -1,19 +1,15 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.json.PositionsSerializer;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
-
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -26,7 +22,7 @@ public class Employee extends Person {
     @OneToMany(
             mappedBy = "employee"
     )
-    @JsonSerialize(using = PositionsSerializer.class)
+    @JsonManagedReference
     private Set<Position> positions;
 
     @Override

@@ -1,5 +1,6 @@
 package com.kopacz.JAROSLAW_KOPACZ_TEST_5.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,6 @@ public class Position {
     @JoinColumn(
             name = "employee_id"
     )
+    @JsonBackReference
     private Employee employee;
 }

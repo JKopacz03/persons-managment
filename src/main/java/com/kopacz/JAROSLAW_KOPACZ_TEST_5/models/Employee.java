@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
@@ -40,5 +40,19 @@ public class Employee extends Person {
         this.actualProfession = actualProfession;
         this.salary = salary;
         this.positions = new HashSet<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(workStartDate, employee.workStartDate) && Objects.equals(actualProfession, employee.actualProfession) && Objects.equals(salary, employee.salary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), workStartDate, actualProfession, salary);
     }
 }

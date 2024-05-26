@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.ClearContext;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.DatabaseUtils;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.config.PersonsTest;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Employee;
+import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.Position;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.User;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.UserRole;
 import com.kopacz.JAROSLAW_KOPACZ_TEST_5.models.command.*;
@@ -34,8 +36,10 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 import static java.lang.String.format;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
